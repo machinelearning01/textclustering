@@ -1,5 +1,9 @@
 from nltk.corpus import wordnet
 
+# rs=[synonyms_n_antonyms(word) for word in utterance.split()]
+# print(rs)
+
+
 def replace_synonyms(utterance, synonyms):
     for value, synonym in synonyms.items():
         for item in synonym:
