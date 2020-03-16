@@ -24,3 +24,5 @@ def perform(action, sentence):
     }
     result = switcher.get(action, None)
     return re.sub(' +', ' ', result)
+
+

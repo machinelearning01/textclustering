@@ -1,4 +1,5 @@
 from nltk.corpus import wordnet
+# Find contextually similar words
 
 # rs=[synonyms_n_antonyms(word) for word in utterance.split()]
 # print(rs)
