@@ -21,3 +21,5 @@ def synonyms_n_antonyms(word):
             if l.antonyms():
                 antonyms.append(l.antonyms()[0].name())
     return synonyms, antonyms
+
+
