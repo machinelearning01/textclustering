@@ -6,7 +6,7 @@ def word2vec(corpus, find_syn):
     sentences = [x.split() for x in corpus]
     
     # Training the Word2Vec model
-    model = Word2Vec(sentences, min_count=1)
+    model = Word2Vec(sentences, min_count=4)
     words = model.wv.vocab
     # Finding Word Vectors
     # vector = model.wv['enroll']

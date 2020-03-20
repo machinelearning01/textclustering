@@ -1,8 +1,9 @@
 from preprocessing import perform, remove_unimportant_words
 from synonyms import synonyms_n_antonyms
 from input_data import input_data
+from word2vec1 import word2vec
 
-synonyms = {"milewise": ["drivewise", "milewise", "drive-wise", "mile-wise", "dw", "mw"]}
+replace_by_synonyms = {"milewise": ["drivewise", "milewise", "drive-wise", "mile-wise", "dw", "mw"]}
 unimportant_words = []
 
 # Input data
@@ -33,9 +34,68 @@ for utterance in corpusx:
     corpus.append(utterance)
     # print("output utterance -", utterance)
 
-print(corpus)
+# print(corpus)
+
+sentences = []
+for sentence in corpus:
+    sentences.append(sentence.split())
+
+words = []
+for text in corpus:
+    for word in text.split(' '):
+        words.append(word)
+
+unique_words = set(words)
+# print("unique_words", unique_words)
+print("sentences", sentences)
+
+ss={}
+relation_distance = 2;
+for sentence in sentences:
+    for i in range(len(sentence)):
+        left = "" if i == 0 else sentence[i - 1]
+        center = sentence[i]
+        right = "" if i == len(sentence)-1 else sentence[i + 1]
+
+        arr=[]
+        if left!="" and right!="":
+            ss[left+", "+right] = center
+
+print(ss)
 
 
+for sentence in sentences:
+    for i in range(len(sentence)-2):
+        center = sentence[i]
+        right1 = "" if i == len(sentence)-1 else sentence[i + 1]
+        right2 = "" if i == len(sentence)-2 else sentence[i + 2]
+
+        arr=[]
+        if right1!="" and right2!="":
+            # ss.append([center, right1, right2])
+            ss[right1 + ", " + right2] = center
+print(ss)
+
+
+for sentence in sentences:
+    for i in range(2, len(sentence)):
+        left1 = sentence[i - 2]
+        left2 = sentence[i - 1]
+        center = sentence[i]
+
+        arr=[]
+        if left1!="" and left2!="":
+            # ss.append([left1, left2, center])
+            ss[left1 + ", " + left2] = center
+
+for key in sorted(ss):
+    print(key +" = "+ ss[key])
+
+# from collections import Counter
+# c = Counter()
+# for x in ss:
+#     c[tuple(x)] += 1
+# print(c)
 
 ########################################
 # words = []
@@ -65,5 +125,5 @@ print(corpus)
 #
 # import pandas as pd
 # df = pd.DataFrame(data, columns = ['input', 'label'])
-# print(df.head(10))
+# print(df)
 # print(word2int)
