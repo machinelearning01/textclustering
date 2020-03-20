@@ -4,7 +4,7 @@ from input_data import input_data
 from word2vec1 import word2vec
 from operator import itemgetter
 
-replace_by_synonyms = {"milewise": ["drivewise", "milewise", "drive-wise", "mile-wise", "dw", "mw"]}
+replace_by_synonyms = {"add": ["enroll", "register", "signup"]}
 unimportant_words = []
 
 # Input data
