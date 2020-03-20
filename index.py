@@ -2,6 +2,7 @@ from preprocessing import perform, remove_unimportant_words
 from synonyms import synonyms_n_antonyms
 from input_data import input_data
 from word2vec1 import word2vec
+from operator import itemgetter
 
 replace_by_synonyms = {"milewise": ["drivewise", "milewise", "drive-wise", "mile-wise", "dw", "mw"]}
 unimportant_words = []
@@ -49,7 +50,7 @@ unique_words = set(words)
 # print("unique_words", unique_words)
 print("sentences", sentences)
 
-ss={}
+lcr=[]
 relation_distance = 2;
 for sentence in sentences:
     for i in range(len(sentence)):
@@ -59,11 +60,15 @@ for sentence in sentences:
 
         arr=[]
         if left!="" and right!="":
-            ss[left+", "+right] = center
+            # print(left + ", " + right, " -> "+center)
+            lcr.append([left+", "+right+" (C)", center])
 
-print(ss)
 
+res = sorted(lcr, key=itemgetter(0))
+for item in res:
+    print(item)
 
+crr=[]
 for sentence in sentences:
     for i in range(len(sentence)-2):
         center = sentence[i]
@@ -72,11 +77,14 @@ for sentence in sentences:
 
         arr=[]
         if right1!="" and right2!="":
-            # ss.append([center, right1, right2])
-            ss[right1 + ", " + right2] = center
-print(ss)
+            crr.append([right1 + ", " + right2+" (R)", center])
 
 
+res = sorted(crr, key=itemgetter(0))
+for item in res:
+    print(item)
+
+llc=[]
 for sentence in sentences:
     for i in range(2, len(sentence)):
         left1 = sentence[i - 2]
@@ -85,11 +93,14 @@ for sentence in sentences:
 
         arr=[]
         if left1!="" and left2!="":
-            # ss.append([left1, left2, center])
-            ss[left1 + ", " + left2] = center
+            llc.append([left1 + ", " + left2+" (L)", center])
+            # print(left1 + ", " + left2, " -> "+center)
 
-for key in sorted(ss):
-    print(key +" = "+ ss[key])
+res = sorted(llc, key=itemgetter(0))
+for item in res:
+    print(item)
+# for key in sorted(ss.keys()):
+#     print(key +" = "+ ss[key])
 
 # from collections import Counter
 # c = Counter()
