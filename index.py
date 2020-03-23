@@ -1,11 +1,9 @@
 from preprocessing import perform, remove_unimportant_words
-from synonyms import synonyms_n_antonyms
 from input_data import input_data
-from word2vec1 import word2vec
-from operator import itemgetter
+from identify_slots import possible_slots
 
-replace_by_synonyms = {"add": ["enroll", "register", "signup"]}
-unimportant_words = []
+replace_by_synonyms = {"add": ["add", "signup"]}
+unimportant_words = ["policy"]
 
 # Input data
 corpusx = input_data()
@@ -48,76 +46,11 @@ for text in corpus:
 
 unique_words = set(words)
 # print("unique_words", unique_words)
-print("sentences", sentences)
+# print("sentences", sentences)
 
 
-def get_lcr(sentences):
-    lcr=[]
-    for sentence in sentences:
-        for i in range(len(sentence)):
-            left = "" if i == 0 else sentence[i - 1]
-            center = sentence[i]
-            right = "" if i == len(sentence)-1 else sentence[i + 1]
-
-            if left!="" and right!="":
-                # print(left + ", " + right, " -> "+center)
-                lcr.append([left+", "+right+" (C)", center])
-    return lcr
-
-def get_crr(sentences):
-    crr=[]
-    for sentence in sentences:
-        for i in range(len(sentence)-2):
-            center = sentence[i]
-            right1 = "" if i == len(sentence)-1 else sentence[i + 1]
-            right2 = "" if i == len(sentence)-2 else sentence[i + 2]
-
-            if right1!="" and right2!="":
-                crr.append([right1 + ", " + right2+" (R)", center])
-    return crr
-
-def get_llc(sentences):
-    llc=[]
-    for sentence in sentences:
-        for i in range(2, len(sentence)):
-            left1 = sentence[i - 2]
-            left2 = sentence[i - 1]
-            center = sentence[i]
-
-            arr=[]
-            if left1!="" and left2!="":
-                llc.append([left1 + ", " + left2+" (L)", center])
-    return llc
-
-
-def get_likely_slots(arr):
-    res = sorted(arr, key=itemgetter(0))
-
-    dist_list = set(map(tuple, res))
-    key_list=[]
-    for item in dist_list:
-        key_list.append(item[0])
-
-    dist_key_list = set(key_list)
-    # print(dist_key_list)
-
-    likely_slots={}
-    for key_item in dist_key_list:
-        arr_res = [itm[1] for itm in dist_list if itm[0] == key_item]
-        if len(arr_res) >= 2:
-            likely_slots[key_item] = arr_res
-
-    return likely_slots
-
-
-lcr = get_lcr(sentences)
-crr = get_crr(sentences)
-llc = get_llc(sentences)
-
-print(get_likely_slots(lcr))
-print(get_likely_slots(crr))
-print(get_likely_slots(llc))
-
+poss_slots = possible_slots(sentences)
+print(poss_slots)
 
 
 ########################################
