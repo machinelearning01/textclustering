@@ -1,4 +1,4 @@
-
+import read_excel from file_mgmt
 
 input_data2 = ['queen is always referred to a godess',
                'queen is looking like a godess',
@@ -49,6 +49,7 @@ input_data1=['reset my windows password',
 'reset my windows password'
              ]
 
-
+excel_file_path = ""
 def input_data():
+    excel_data = read_excel(excel_file_path)
     return input_data2
