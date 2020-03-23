@@ -31,23 +31,12 @@ for utterance in corpusx:
         else:
             utterance = perform(step, utterance)
     corpus.append(utterance)
-    # print("output utterance -", utterance)
-
 # print(corpus)
 
 sentences = []
 for sentence in corpus:
     sentences.append(sentence.split())
-
-words = []
-for text in corpus:
-    for word in text.split(' '):
-        words.append(word)
-
-unique_words = set(words)
-# print("unique_words", unique_words)
 # print("sentences", sentences)
-
 
 poss_slots = possible_slots(sentences)
 print(poss_slots)
