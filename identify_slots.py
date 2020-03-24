@@ -7,9 +7,9 @@ def get_lcr(sentences, distance):
         for i in range(distance, len(sentence)-distance):
             dis_arr = []
             for no in range(distance):
-                dis_arr.append(sentence[i - no])
-            for no in reversed(range(distance)):
-                dis_arr.append(sentence[i + no])
+                dis_arr.append(sentence[no])
+            for no in range(i+1, i+distance):
+                dis_arr.append(sentence[no])
             lcr.append([", ".join(dis_arr) + " (C)", sentence[i]])
     return lcr
 
