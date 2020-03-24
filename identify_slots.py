@@ -10,7 +10,7 @@ def get_lcr(sentences, distance):
                 dis_arr.append(sentence[i - no])
             for no in reversed(range(distance)):
                 dis_arr.append(sentence[i + no])
-            lcr.append(", ".join(dis_arr) + " (C)", sentence[i])
+            lcr.append([", ".join(dis_arr) + " (C)", sentence[i]])
     return lcr
 
 def get_crr(sentences, distance):
@@ -20,7 +20,7 @@ def get_crr(sentences, distance):
             dis_arr = []
             for no in range(distance+1):
                 if no == distance:
-                    crr.append(", ".join(dis_arr) + " (R)", sentence[i+no])
+                    crr.append([", ".join(dis_arr) + " (R)", sentence[i+no]])
                 else:
                     dis_arr.append(sentence[i+no])
     return crr
@@ -32,7 +32,7 @@ def get_llc(sentences, distance):
             dis_arr = []
             for no in reversed(range(distance+1)):
                 if no == i:
-                    llc.append(", ".join(dis_arr) + " (L)", sentence[i-no])
+                    llc.append([", ".join(dis_arr) + " (L)", sentence[i-no]])
                 else:
                     dis_arr.append(sentence[i-no])
     return llc
