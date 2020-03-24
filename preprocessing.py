@@ -5,7 +5,6 @@ from nltk.corpus import stopwords
 cachedStopWords = stopwords.words("english")
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
-from nltk.corpus import wordnet
 
 def remove_unimportant_words(utterance, unimportant_words):
     for word in utterance.split():
@@ -13,16 +12,24 @@ def remove_unimportant_words(utterance, unimportant_words):
             utterance = utterance.replace(word, "")
     return utterance
 
-def perform(action, sentence):
+def replace_synonyms(utterance, synonyms):
+    for value, synonym in synonyms.items():
+        for item in synonym:
+            utterance = utterance.replace(item, value)
+    return utterance
+
+def perform(action, sentence, params):
     switcher = {
-        "lowercase": sentence.lower(),
-        "remove_url": re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', '', sentence),
-        "remove_email": re.sub(r'\S*@\S*\s?', '', sentence),
-        "extract_only_text": " ".join(re.findall("[a-zA-Z]+", sentence)),
-        "remove_stopwords": ' '.join([word for word in sentence.split() if word not in cachedStopWords]),
-        "lemmatize": ' '.join([lemmatizer.lemmatize(word, "v") for word in sentence.split(" ")])
+        "lowercase": lambda: sentence.lower(),
+        "remove_url": lambda: re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', '', sentence),
+        "remove_email": lambda: re.sub(r'\S*@\S*\s?', '', sentence),
+        "extract_only_text": lambda: " ".join(re.findall("[a-zA-Z]+", sentence)),
+        "remove_stopwords": lambda: ' '.join([word for word in sentence.split() if word not in cachedStopWords]),
+        "replace_by_synonyms": lambda: replace_synonyms(sentence, params),
+        "remove_unimportant_words": lambda: remove_unimportant_words(sentence, params),
+        "lemmatize": lambda: ' '.join([lemmatizer.lemmatize(word, "v") for word in sentence.split(" ")])
     }
-    result = switcher.get(action, None)
+    result = switcher.get(action, lambda: "invalid action")()
     return re.sub(' +', ' ', result)
 
 
