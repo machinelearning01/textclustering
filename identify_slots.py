@@ -37,21 +37,56 @@ def get_llc(sentences, distance):
                     dis_arr.append(sentence[i-no])
     return llc
 
+def find_n_occurences(key_value_array, n):
+    found_duplicates = []
+    for ech in key_value_array:
+        arrToStr = ' '.join(map(str, ech))
+        found_duplicates.append(arrToStr)
+
+    n_occurs=[]
+    found_duplicates.sort()
+
+    # Constants Declaration
+    prev = -1
+    count = 0
+    flag = 0
+
+    # Iterating
+    for item in found_duplicates:
+        if item == prev:
+            count = count + 1
+        else:
+            count = 1
+        prev = item
+
+        if count == n:
+            flag = 1
+            n_occurs.append(item)
+
+    # If no element is not found.
+    if flag == 0:
+        print("No occurrences found")
+
+    n_occurs_arr = []
+    for occ in n_occurs:
+        rssplt = occ.rsplit(' ', 1)
+        n_occurs_arr.append(rssplt)
+    return n_occurs_arr
 
 def get_likely_slots(arr):
-    res = sorted(arr, key=itemgetter(0))
+    sorted_arr = sorted(arr, key=itemgetter(0))
 
-    dist_list = set(map(tuple, res))
     key_list=[]
-    for item in dist_list:
+    for item in sorted_arr:
         key_list.append(item[0])
-
     dist_key_list = set(key_list)
     # print(dist_key_list)
 
+    n_occurs_arr = find_n_occurences(sorted_arr, consider_min_occurences_of_keyword)
+
     likely_slots={}
     for key_item in dist_key_list:
-        arr_res = [itm[1] for itm in dist_list if itm[0] == key_item]
+        arr_res = [itm[1] for itm in n_occurs_arr if itm[0] == key_item]
         if len(arr_res) >= min_items_in_slot:
             likely_slots[key_item] = arr_res
 
@@ -59,7 +94,9 @@ def get_likely_slots(arr):
 
 
 strong_relation_distance = 1
+consider_min_occurences_of_keyword = 3
 min_items_in_slot = 3
+
 
 def possible_slots(sentences):
     lcr = get_lcr(sentences, strong_relation_distance)
