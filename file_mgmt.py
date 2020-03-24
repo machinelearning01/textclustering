@@ -5,7 +5,7 @@ import os.path
 def read_excel(file_path):
     wb = xlrd.open_workbook(file_path)
     sheet = wb.sheet_by_index(0)
-    return sheet.col_values(1)
+    return sheet.col_values(0,1)
 
 def read_excel_with_pandas(file_path):
     data = pd.DataFrame()

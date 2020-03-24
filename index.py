@@ -6,7 +6,8 @@ replace_by_synonyms = {"add": ["add", "signup"]}
 unimportant_words = ["policy"]
 
 # Input data
-corpusx = input_data()
+excel_file_path="./only_utterances.xlsx"
+corpusx = input_data(excel_file_path)
 
 steps = [
     "lowercase", # Lowercase
