@@ -1,11 +1,11 @@
 from operator import itemgetter
 
 class Identify_Slots:
-    def __init__(self, sentences, strong_relation_distance, min_occurrences_of_keyword, min_occurrences_of_neighbour_keys, min_items_in_slot):
+    def __init__(self, sentences, strong_relation_distance, min_occurrences_of_neighbour_keys, min_occurrences_of_keyword, min_items_in_slot):
         self.sentences = sentences
         self.distance = strong_relation_distance
-        self.min_occurrences_of_keyword = min_occurrences_of_keyword
         self.min_occurrences_of_neighbour_keys = min_occurrences_of_neighbour_keys
+        self.min_occurrences_of_keyword = min_occurrences_of_keyword
         self.min_items_in_slot = min_items_in_slot
 
     def get_lcr(self):
@@ -39,7 +39,7 @@ class Identify_Slots:
         for sentence in self.sentences:
             for i in range(distn, len(sentence)):
                 dis_arr = []
-                for no in reversed(range(distn+1)):
+                for no in range(distn+1):
                     if no == distn:
                         llc.append([", ".join(dis_arr) + " (L)", sentence[no]])
                     else:

@@ -13,7 +13,7 @@ def remove_unimportant_words(utterance, unimportant_words):
     return utterance
 
 def replace_synonyms(utterance, params):
-    synonyms = params["synonyms"]
+    synonyms = params
     for value, synonym in synonyms.items():
         match = set(utterance.split(" ")).intersection(synonym)
         if len(match) >= 1:

@@ -48,7 +48,9 @@ input_data1=['reset my windows password',
              'reset my machine',
              'reset my windows password']
 
-excel_file_path = ""
-def input_data():
-    excel_data = read_excel(excel_file_path)
-    return input_data2
+def input_data(file_path):
+    if file_path!="":
+        excel_data=read_excel(file_path)
+    else:
+        excel_data=input_data2
+    return excel_data
