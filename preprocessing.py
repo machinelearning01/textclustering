@@ -12,10 +12,13 @@ def remove_unimportant_words(utterance, unimportant_words):
             utterance = utterance.replace(word, "")
     return utterance
 
-def replace_synonyms(utterance, synonyms):
+def replace_synonyms(utterance, params):
+    synonyms = params["synonyms"]
     for value, synonym in synonyms.items():
-        for item in synonym:
-            utterance = utterance.replace(item, value)
+        match = set(utterance.split(" ")).intersection(synonym)
+        if len(match) >= 1:
+            for item in synonym:
+                utterance = utterance.replace(item, value)
     return utterance
 
 def perform(action, sentence, params):

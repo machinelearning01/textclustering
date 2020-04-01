@@ -1,10 +1,11 @@
 from operator import itemgetter
 
 class Identify_Slots:
-    def __init__(self, sentences, strong_relation_distance, min_occurrences_of_keyword, min_items_in_slot):
+    def __init__(self, sentences, strong_relation_distance, min_occurrences_of_keyword, min_occurrences_of_neighbour_keys, min_items_in_slot):
         self.sentences = sentences
         self.distance = strong_relation_distance
         self.min_occurrences_of_keyword = min_occurrences_of_keyword
+        self.min_occurrences_of_neighbour_keys = min_occurrences_of_neighbour_keys
         self.min_items_in_slot = min_items_in_slot
 
     def get_lcr(self):
@@ -46,55 +47,54 @@ class Identify_Slots:
         return self.get_likely_slots(llc)
 
     def find_n_occurrences(self, key_value_array, n):
-        found_duplicates = []
+        key_value_stringified = []
         for ech in key_value_array:
             arrToStr = ' '.join(map(str, ech))
-            found_duplicates.append(arrToStr)
+            key_value_stringified.append(arrToStr)
 
-        n_occurs=[]
-        found_duplicates.sort()
+        n_occurs_of_key_value=[]
+        key_value_stringified.sort()
 
-        # Constants Declaration
         prev = -1
         count = 0
         flag = 0
 
-        # Iterating
-        for item in found_duplicates:
-            if item == prev:
-                count = count + 1
-            else:
-                count = 1
+        for item in key_value_stringified:
+            if item == prev: count = count + 1
+            else: count = 1
             prev = item
 
             if count == n:
                 flag = 1
-                n_occurs.append(item)
+                n_occurs_of_key_value.append(item)
 
-        # If no element is not found.
         if flag == 0:
             print("No occurrences found")
 
-        n_occurs_arr = []
-        for occ in n_occurs:
+        arr_n_occurs_of_key_value = []
+        for occ in n_occurs_of_key_value:
             rssplt = occ.rsplit(' ', 1)
-            n_occurs_arr.append(rssplt)
-        return n_occurs_arr
+            arr_n_occurs_of_key_value.append(rssplt)
+        return arr_n_occurs_of_key_value
 
     def get_likely_slots(self, arr):
-        sorted_arr = arr  #sorted(arr, key=itemgetter(0))
-
-        key_list=[]
-        for item in sorted_arr:
+        key_list = []
+        for item in arr:
             key_list.append(item[0])
         dist_key_list = set(key_list)
-        # print(dist_key_list)
 
-        n_occurs_arr = self.find_n_occurrences(sorted_arr, self.min_occurrences_of_keyword)
+        if self.min_occurrences_of_neighbour_keys >= 1:
+            arr_n_occurs_of_key=[]
+            for ech in dist_key_list:
+                if key_list.count(ech) >= self.min_occurrences_of_neighbour_keys:
+                    arr_n_occurs_of_key.append(ech)
+            dist_key_list = arr_n_occurs_of_key
+
+        arr_n_occurs_of_key_value = self.find_n_occurrences([kv for kv in arr if kv[0] in dist_key_list], self.min_occurrences_of_keyword) if self.min_occurrences_of_keyword >= 1 else arr
 
         likely_slots={}
         for key_item in dist_key_list:
-            arr_res = [itm[1] for itm in n_occurs_arr if itm[0] == key_item]
+            arr_res = [itm[1] for itm in arr_n_occurs_of_key_value if itm[0] == key_item]
             if len(arr_res) >= self.min_items_in_slot:
                 likely_slots[key_item] = arr_res
 
