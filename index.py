@@ -1,8 +1,10 @@
+
 from preprocessing import perform
 from input_data import input_data
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 import numpy as np
+from doctovec import generate_clusters
 
 # manually add if you have any
 replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
@@ -65,13 +67,12 @@ steps_1 = [
 ]
 
 steps_2 = [
-    "replace_by_slotnames", # Replace every word in the utterance by it's slot name
-    "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
+    "replace_by_slotnames" # Replace every word in the utterance by it's slot name
+    # "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
 cleanup_sentences=run(steps_1, corpusx)
 final_data=run(steps_2, cleanup_sentences)
 print(final_data)
 
-
-
+generate_clusters(final_data, False)
