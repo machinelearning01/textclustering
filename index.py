@@ -1,13 +1,22 @@
 from preprocessing import perform
 from input_data import input_data
-import identify_slots as i_s
+from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 import numpy as np
 
+# manually add if you have any
 replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
+unimportant_words = []
+
+# do not modify this. these are global variables
 replace_by_synonyms={}
 replace_by_slotnames = {}
-unimportant_words = []
+
+# strong_relation_distance=1
+# min_occurrences_of_neighbour_keys=2
+# min_occurrences_of_keyword=2
+# min_items_in_slot=3
+slots_config = [[1, 2, 2, 2]]
 
 # Input data
 excel_file_path=""
@@ -21,11 +30,13 @@ def run(steps, utterances):
         for step in steps:
             params=""
             if step == "replace_by_synonyms":
+                identify_matching_words("identify_synonyms_antonyms")
                 params = replace_by_synonyms
             elif step == "replace_by_custom_synonyms":
                 step = "replace_by_synonyms"
                 params = replace_by_custom_synonyms
             elif step == "replace_by_slotnames":
+                identify_matching_words("identify_slots")
                 step = "replace_by_synonyms"
                 params = replace_by_slotnames
             elif step == "remove_unimportant_words":
@@ -33,8 +44,14 @@ def run(steps, utterances):
 
             utterance = perform(step, utterance, params)
         corpus.append(utterance)
-
     return corpus
+
+def identify_matching_words(type):
+    if type == "identify_synonyms_antonyms":
+        # identify synonyms and antonyms
+        replace_by_synonyms = synant.identify_synonyms_matching_utters(cleanup_sentences)
+    elif type == "identify_slots":
+        replace_by_slotnames = identify_possible_slots(cleanup_sentences, slots_config)
 
 steps_1 = [
     "lowercase", # Lowercase
@@ -47,62 +64,14 @@ steps_1 = [
     "replace_by_custom_synonyms", # Replace pre known synonyms by it's value
 ]
 
-
 steps_2 = [
     "replace_by_slotnames", # Replace every word in the utterance by it's slot name
-    "replace_by_synonyms"
+    "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
 cleanup_sentences=run(steps_1, corpusx)
-print(cleanup_sentences)
-
-# identify synonyms and antonyms
-replace_by_synonyms = synant.identify_synonyms_matching_utters(cleanup_sentences)
-print("replace_by_synonyms", replace_by_synonyms)
-
-# identify possible slots
-split_sentences = []
-for sentence in cleanup_sentences:
-    split_sentences.append(sentence.split())
-idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
-identify_possible_slots = idfy_slots.possible_slots()
-print("identify_possible_slots", identify_possible_slots)
-
-# strong_relation_distance=2
-# min_occurrences_of_neighbour_keys=3
-# min_occurrences_of_keyword=3
-# min_items_in_slot=3
-# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
-# lcr=idfy_slots.get_lcr()
-# print(idfy_slots.uniqueVals(lcr))
-#
-# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
-# crr=idfy_slots.get_crr()
-# print(idfy_slots.uniqueVals(crr))
-#
-# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
-# llc=idfy_slots.get_llc()
-# print(idfy_slots.uniqueVals(llc))
-
-# identify_possible_slots = idfy_slots.uniqueVals(lcr) + idfy_slots.uniqueVals(crr) + idfy_slots.uniqueVals(llc)
-# print("identified_slots", identify_possible_slots)
-
-# remove dictionary item whose values are duplicated
-
-# remove the subsets and create dictionary
-def remove_subsets(ips):
-    for k, v in ips.items():
-        for key, value in ips.items():
-            if v != value:
-                if set(v).issubset(set(value)):
-                    del ips[k]
-                    remove_subsets(ips)
-    return ips
-ips = remove_subsets(identify_possible_slots)
-print(ips)
-
-# final_data=run(steps_2, cleanup_sentences)
-
+final_data=run(steps_2, cleanup_sentences)
+print(final_data)
 
 
 

@@ -17,7 +17,7 @@ class Identify_Slots:
                     dis_arr.append(sentence[no])
                 for no in range(i+1, i+self.distance+1):
                     dis_arr.append(sentence[no])
-                lcr.append([", ".join(dis_arr) + " (C)", sentence[i]])
+                lcr.append(["".join(dis_arr) + "C", sentence[i]])
         return self.get_likely_slots(lcr)
 
     def get_crr(self):
@@ -28,7 +28,7 @@ class Identify_Slots:
                 dis_arr = []
                 for no in reversed(range(distn+i+1)):
                     if no == i:
-                        crr.append([", ".join(dis_arr) + " (R)", sentence[no]])
+                        crr.append(["".join(dis_arr) + "R", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
         return self.get_likely_slots(crr)
@@ -41,7 +41,7 @@ class Identify_Slots:
                 dis_arr = []
                 for no in range(distn+1):
                     if no == distn:
-                        llc.append([", ".join(dis_arr) + " (L)", sentence[no]])
+                        llc.append(["".join(dis_arr) + "L", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
         return self.get_likely_slots(llc)
@@ -101,7 +101,6 @@ class Identify_Slots:
 
         return likely_slots
 
-
     def possible_slots(self):
         lcr = self.get_lcr()
         crr = self.get_crr()
@@ -109,3 +108,38 @@ class Identify_Slots:
         # print(lcr)
         identified_slots = {**lcr, **crr, **llc}
         return identified_slots
+
+# remove the subsets and create dictionary
+def remove_subsets(ips):
+    for k, v in ips.items():
+        for key, value in ips.items():
+            if v != value:
+                if set(v).issubset(set(value)):
+                    del ips[k]
+                    remove_subsets(ips)
+    return ips
+
+def identify_possible_slots(sentences, slots_config):
+    split_sentences = []
+    for sentence in sentences:
+        split_sentences.append(sentence.split())
+
+    if len(slots_config) == 1:
+        idfy_slots = Identify_Slots(split_sentences, slots_config[0][0], slots_config[0][1], slots_config[0][2], slots_config[0][3])
+        identify_possible_slots = idfy_slots.possible_slots()
+        return remove_subsets(identify_possible_slots)
+    else:
+        idfy_slots=Identify_Slots(split_sentences, slots_config[0][0], slots_config[0][1], slots_config[0][2], slots_config[0][3])
+        lcr=idfy_slots.get_lcr()
+        print(idfy_slots.uniqueVals(lcr))
+
+        idfy_slots=Identify_Slots(split_sentences, slots_config[1][0], slots_config[1][1], slots_config[1][2], slots_config[1][3])
+        crr=idfy_slots.get_crr()
+        print(idfy_slots.uniqueVals(crr))
+
+        idfy_slots=Identify_Slots(split_sentences, slots_config[2][0], slots_config[2][1], slots_config[2][2], slots_config[2][3])
+        llc=idfy_slots.get_llc()
+        print(idfy_slots.uniqueVals(llc))
+
+        identify_possible_slots = idfy_slots.uniqueVals(lcr) + idfy_slots.uniqueVals(crr) + idfy_slots.uniqueVals(llc)
+        return remove_subsets(identify_possible_slots)
