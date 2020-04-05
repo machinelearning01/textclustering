@@ -96,14 +96,16 @@ class Identify_Slots:
         for key_item in dist_key_list:
             arr_res = [itm[1] for itm in arr_n_occurs_of_key_value if itm[0] == key_item]
             if len(arr_res) >= self.min_items_in_slot:
-                likely_slots[key_item] = arr_res
+                if arr_res not in likely_slots.values():
+                    likely_slots[key_item] = arr_res
 
         return likely_slots
+
 
     def possible_slots(self):
         lcr = self.get_lcr()
         crr = self.get_crr()
         llc = self.get_llc()
-        lcr.extend(crr)
-        lcr.extend(llc)
-        return self.get_likely_slots(lcr)
+        # print(lcr)
+        identified_slots = {**lcr, **crr, **llc}
+        return identified_slots

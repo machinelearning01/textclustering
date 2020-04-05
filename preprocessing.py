@@ -18,7 +18,11 @@ def replace_synonyms(utterance, params):
         match = set(utterance.split(" ")).intersection(synonym)
         if len(match) >= 1:
             for item in synonym:
-                utterance = utterance.replace(item, value)
+                rjx = re.compile(r'\b' + item + r'\b')
+                utterance = re.sub(rjx, value, utterance)
+                # print(utterance)
+                # utterance = re.sub(r'\b'+item+'\b', value, utterance)
+                # utterance = utterance.replace(item, value)
     return utterance
 
 def perform(action, sentence, params):
@@ -33,6 +37,7 @@ def perform(action, sentence, params):
         "lemmatize": lambda: ' '.join([lemmatizer.lemmatize(word, "v") for word in sentence.split(" ")])
     }
     result = switcher.get(action, lambda: "invalid action")()
-    return re.sub(' +', ' ', result)
+    # print("performing ["+action+"] => ", sentence, " || ",  result)
+    return re.sub(' +', ' ', result.strip())
 
 

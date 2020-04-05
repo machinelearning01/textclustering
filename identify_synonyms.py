@@ -11,7 +11,7 @@ def get_syn_ant(word):
                 antonyms.append(l.antonyms()[0].name())
     return synonyms, antonyms
 
-def get_synms_matching_utters(corpus, custom_synonyms):
+def identify_synonyms_matching_utters(corpus):
     sentences=[]
     for sentence in corpus:
         sentences.append(sentence.split())
@@ -19,6 +19,7 @@ def get_synms_matching_utters(corpus, custom_synonyms):
     allwords = np.concatenate(sentences)
 
     synss={}
+    unique_no=0
     for word in set(allwords):
         if len(word)>2:
             syn, ant = get_syn_ant(word)
@@ -26,10 +27,11 @@ def get_synms_matching_utters(corpus, custom_synonyms):
             if len(syns) >= 2:
                 match = (set(syns)).intersection(allwords)
                 if len(match) >= 2:
-                    synss[word]=match
+                    if match not in synss.values():
+                        if word in synss:
+                            synss[word+unique_no]=match
+                            unique_no=unique_no+1
+                        else:
+                            synss[word]=match
 
-    for key, value in custom_synonyms.items():
-        if key in synss:
-            mergedVals = value.union(synss[key])
-            synss[key] = mergedVals
     return synss

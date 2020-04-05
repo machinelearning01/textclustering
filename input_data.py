@@ -1,8 +1,8 @@
 from file_mgmt import read_excel
 
-input_data2 = ['queen is always referred to a godess',
+input_data2 = ['queen IS Always referred to a godess visit@gmail.com',
                'queen is looking like a godess',
-               'queen was once a young girl',
+               'queen was once a queen young girl queen',
                'a stronger person can become king in any kingdom',
                'a weeker person cannot become a king because he can be killed anytime',
                 'king can be killed anytime so we need make him strong',

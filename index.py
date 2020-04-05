@@ -2,9 +2,12 @@ from preprocessing import perform
 from input_data import input_data
 import identify_slots as i_s
 import identify_synonyms as synant
+import numpy as np
 
-replace_by_synonyms = {"queen": {"lady", "bird"}}
-unimportant_words = ["policy"]
+replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
+replace_by_synonyms={}
+replace_by_slotnames = {}
+unimportant_words = []
 
 # Input data
 excel_file_path=""
@@ -15,17 +18,22 @@ corpusx = input_data(excel_file_path)
 def run(steps, utterances):
     corpus = []
     for utterance in utterances:
-        # print("input utterance -", utterance)
         for step in steps:
-            # print("performing step -", step)
             params=""
             if step == "replace_by_synonyms":
                 params = replace_by_synonyms
+            elif step == "replace_by_custom_synonyms":
+                step = "replace_by_synonyms"
+                params = replace_by_custom_synonyms
+            elif step == "replace_by_slotnames":
+                step = "replace_by_synonyms"
+                params = replace_by_slotnames
             elif step == "remove_unimportant_words":
                 params = unimportant_words
 
             utterance = perform(step, utterance, params)
         corpus.append(utterance)
+
     return corpus
 
 steps_1 = [
@@ -34,49 +42,67 @@ steps_1 = [
     "remove_email", # Remove email address
     "extract_only_text", # Extract only text (remove numbers and special characters)
     "remove_stopwords", # Remove stopwords
+    "remove_unimportant_words", # Remove common words which may not help in clustering Ex: "policy" word is common in insurance or hr related utterances
+    "lemmatize", # Identify and replace the base or dictionary form of a word
+    "replace_by_custom_synonyms", # Replace pre known synonyms by it's value
 ]
+
 
 steps_2 = [
-    "replace_by_synonyms", # Replace pre known synonyms by it's value
-    "remove_unimportant_words", # Remove common words which may not help in clustering Ex: "policy" word is common in insurance or hr related utterances
-    "lemmatize" # Identify and replace the base or dictionary form of a word
+    "replace_by_slotnames", # Replace every word in the utterance by it's slot name
+    "replace_by_synonyms"
 ]
-# 7. Create slots - collect synonyms and antonyms together.
-# 8. Replace every word in the utterance by it's slot name
 
-cleanup_data=run(steps_1, corpusx)
-replace_by_synonyms = synant.get_synms_matching_utters(cleanup_data, replace_by_synonyms)
-# print(replace_by_synonyms)
-final_data=run(steps_2, cleanup_data)
+cleanup_sentences=run(steps_1, corpusx)
+print(cleanup_sentences)
 
-sentences = []
-for sentence in final_data:
-    sentences.append(sentence.split())
-# print("sentences", sentences)
+# identify synonyms and antonyms
+replace_by_synonyms = synant.identify_synonyms_matching_utters(cleanup_sentences)
+print("replace_by_synonyms", replace_by_synonyms)
 
-def uniqueVals(data):
-    duplicateValues=list()
-    uniqueValues=list()
-    for x in data.values():
-        if x not in uniqueValues:
-            uniqueValues.append(x)
-        # else:
-        #     duplicateValues.append(x)
-    return uniqueValues
+# identify possible slots
+split_sentences = []
+for sentence in cleanup_sentences:
+    split_sentences.append(sentence.split())
+idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
+identify_possible_slots = idfy_slots.possible_slots()
+print("identify_possible_slots", identify_possible_slots)
 
 # strong_relation_distance=2
 # min_occurrences_of_neighbour_keys=3
 # min_occurrences_of_keyword=3
 # min_items_in_slot=3
-idfy_slots=i_s.Identify_Slots(sentences, 1, 3, 2, 2)
-lcr=idfy_slots.get_lcr()
-print(uniqueVals(lcr))
+# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
+# lcr=idfy_slots.get_lcr()
+# print(idfy_slots.uniqueVals(lcr))
+#
+# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
+# crr=idfy_slots.get_crr()
+# print(idfy_slots.uniqueVals(crr))
+#
+# idfy_slots=i_s.Identify_Slots(split_sentences, 1, 2, 2, 2)
+# llc=idfy_slots.get_llc()
+# print(idfy_slots.uniqueVals(llc))
 
-idfy_slots=i_s.Identify_Slots(sentences, 1, 3, 2, 2)
-crr=idfy_slots.get_crr()
-print(uniqueVals(crr))
+# identify_possible_slots = idfy_slots.uniqueVals(lcr) + idfy_slots.uniqueVals(crr) + idfy_slots.uniqueVals(llc)
+# print("identified_slots", identify_possible_slots)
 
-idfy_slots=i_s.Identify_Slots(sentences, 1, 3, 2, 2)
-llc=idfy_slots.get_llc()
-print(uniqueVals(llc))
+# remove dictionary item whose values are duplicated
+
+# remove the subsets and create dictionary
+def remove_subsets(ips):
+    for k, v in ips.items():
+        for key, value in ips.items():
+            if v != value:
+                if set(v).issubset(set(value)):
+                    del ips[k]
+                    remove_subsets(ips)
+    return ips
+ips = remove_subsets(identify_possible_slots)
+print(ips)
+
+# final_data=run(steps_2, cleanup_sentences)
+
+
+
 
