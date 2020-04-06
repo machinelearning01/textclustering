@@ -20,7 +20,7 @@ def replace_synonyms(utterance, params):
             for item in synonym:
                 rjx = re.compile(r'\b' + item + r'\b')
                 utterance = re.sub(rjx, value, utterance)
-                # print(utterance)
+                print("after replace", utterance)
                 # utterance = re.sub(r'\b'+item+'\b', value, utterance)
                 # utterance = utterance.replace(item, value)
     return utterance
@@ -37,7 +37,7 @@ def perform(action, sentence, params):
         "lemmatize": lambda: ' '.join([lemmatizer.lemmatize(word, "v") for word in sentence.split(" ")])
     }
     result = switcher.get(action, lambda: "invalid action")()
-    # print("performing ["+action+"] => ", sentence, " || ",  result)
+    print("performing ["+action+"] => ", sentence, " || ",  result)
     return re.sub(' +', ' ', result.strip())
 
 

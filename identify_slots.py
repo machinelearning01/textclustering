@@ -17,7 +17,7 @@ class Identify_Slots:
                     dis_arr.append(sentence[no])
                 for no in range(i+1, i+self.distance+1):
                     dis_arr.append(sentence[no])
-                lcr.append(["".join(dis_arr) + "C", sentence[i]])
+                lcr.append(["".join(dis_arr) + "c", sentence[i]])
         return self.get_likely_slots(lcr)
 
     def get_crr(self):
@@ -28,7 +28,7 @@ class Identify_Slots:
                 dis_arr = []
                 for no in reversed(range(distn+i+1)):
                     if no == i:
-                        crr.append(["".join(dis_arr) + "R", sentence[no]])
+                        crr.append(["".join(dis_arr) + "r", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
         return self.get_likely_slots(crr)
@@ -41,7 +41,7 @@ class Identify_Slots:
                 dis_arr = []
                 for no in range(distn+1):
                     if no == distn:
-                        llc.append(["".join(dis_arr) + "L", sentence[no]])
+                        llc.append(["".join(dis_arr) + "l", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
         return self.get_likely_slots(llc)

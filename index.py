@@ -32,15 +32,14 @@ def run(steps, utterances):
         for step in steps:
             params=""
             if step == "replace_by_synonyms":
-                identify_matching_words("identify_synonyms_antonyms")
                 params = replace_by_synonyms
             elif step == "replace_by_custom_synonyms":
                 step = "replace_by_synonyms"
                 params = replace_by_custom_synonyms
             elif step == "replace_by_slotnames":
-                identify_matching_words("identify_slots")
                 step = "replace_by_synonyms"
                 params = replace_by_slotnames
+                print("replace by slotnames", params)
             elif step == "remove_unimportant_words":
                 params = unimportant_words
 
@@ -50,10 +49,9 @@ def run(steps, utterances):
 
 def identify_matching_words(type):
     if type == "identify_synonyms_antonyms":
-        # identify synonyms and antonyms
-        replace_by_synonyms = synant.identify_synonyms_matching_utters(cleanup_sentences)
+        return synant.identify_synonyms_matching_utters(cleanup_sentences)
     elif type == "identify_slots":
-        replace_by_slotnames = identify_possible_slots(cleanup_sentences, slots_config)
+        return identify_possible_slots(cleanup_sentences, slots_config)
 
 steps_1 = [
     "lowercase", # Lowercase
@@ -67,12 +65,14 @@ steps_1 = [
 ]
 
 steps_2 = [
-    "replace_by_slotnames" # Replace every word in the utterance by it's slot name
-    # "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
+    "replace_by_slotnames", # Replace every word in the utterance by it's slot name
+    "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
 cleanup_sentences=run(steps_1, corpusx)
-final_data=run(steps_2, cleanup_sentences)
-print(final_data)
+replace_by_slotnames = identify_matching_words("identify_slots")
+replace_by_synonyms = identify_matching_words("identify_synonyms_antonyms")
+replaced_sentences=run(steps_2, cleanup_sentences)
+print(replaced_sentences)
 
-generate_clusters(final_data, False)
+generate_clusters(replaced_sentences, True)

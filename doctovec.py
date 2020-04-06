@@ -5,7 +5,7 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 
 def doctovec_model(arr_clean_sentences):
     tagged_data = [TaggedDocument(words=_d, tags=[str(i)]) for i, _d in enumerate(arr_clean_sentences)]
-    max_epochs = 100
+    max_epochs = 10
     vec_size = 20
     alpha = 0.025
 
@@ -33,14 +33,20 @@ def generate_clusters(arr_clean_sentences, fresh_model):
         doctovec_model(arr_clean_sentences)
     model = Doc2Vec.load('saved_doc2vec_model')
 
-    new_sentence = arr_clean_sentences[0].split(" ")
+    test_utterance = "stronger kingbecomer become king kingdom"
+    new_sentence = test_utterance.split(" ")
     print(new_sentence)
-    similar_doc=model.docvecs.most_similar(positive=[model.infer_vector(new_sentence)],topn=10)
+    # similar_doc=model.docvecs.most_similar(positive=[model.infer_vector(new_sentence)],topn=10)
+    # print(similar_doc)
+    # print(arr_clean_sentences[0], arr_clean_sentences[int(similar_doc[0][0])])
+
+    # v1 = model.infer_vector(new_sentence)
+    # print("V1_infer", v1)
+
+    # to find most similar doc using tags
+    similar_doc = model.docvecs.most_similar('1')
     print(similar_doc)
-
-# v1 = model.infer_vector(new_sentence)
-# print("V1_infer", v1)
-
-# to find most similar doc using tags
-# similar_doc = model.docvecs.most_similar('1')
-# print(similar_doc)
+    print(arr_clean_sentences[0])
+    for ech in similar_doc:
+        if float(ech[1]) >0.9:
+            print(arr_clean_sentences[int(ech[0])])
