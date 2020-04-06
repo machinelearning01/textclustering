@@ -39,7 +39,6 @@ def run(steps, utterances):
             elif step == "replace_by_slotnames":
                 step = "replace_by_synonyms"
                 params = replace_by_slotnames
-                print("replace by slotnames", params)
             elif step == "remove_unimportant_words":
                 params = unimportant_words
 

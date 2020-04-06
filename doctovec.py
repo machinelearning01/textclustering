@@ -36,7 +36,7 @@ def generate_clusters(arr_clean_sentences, fresh_model):
     test_utterance = "stronger kingbecomer become king kingdom"
     new_sentence = test_utterance.split(" ")
     print(new_sentence)
-    # similar_doc=model.docvecs.most_similar(positive=[model.infer_vector(new_sentence)],topn=10)
+    similar_doc=model.docvecs.most_similar(positive=[model.infer_vector(new_sentence)],topn=10)
     # print(similar_doc)
     # print(arr_clean_sentences[0], arr_clean_sentences[int(similar_doc[0][0])])
 
@@ -44,7 +44,7 @@ def generate_clusters(arr_clean_sentences, fresh_model):
     # print("V1_infer", v1)
 
     # to find most similar doc using tags
-    similar_doc = model.docvecs.most_similar('1')
+    # similar_doc = model.docvecs.most_similar('1')
     print(similar_doc)
     print(arr_clean_sentences[0])
     for ech in similar_doc:
