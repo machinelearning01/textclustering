@@ -103,6 +103,15 @@ class Identify_Slots:
 
         return likely_slots
 
+    def uniqueVals(self, data):
+        duplicateValues = list()
+        uniqueValues = list()
+        for x in data.values():
+            if x not in uniqueValues:
+                uniqueValues.append(x)
+                #     duplicateValues.append(x)
+        return uniqueValues
+
     def possible_slots(self):
         lcr = self.get_lcr()
         crr = self.get_crr()
