@@ -77,7 +77,27 @@ print("replace_by_slotnames", replace_by_slotnames)
 replaced_sentences=run(steps_2, cleanup_sentences)
 print(replaced_sentences)
 
-# generate_clusters(replaced_sentences, True)
-similarity_matrix = similar(replaced_sentences)
-for arr in similarity_matrix:
-    print([round(val, 2) for val in arr])
+def clusters(arr_sentences):
+    similarity_matrix = similar(arr_sentences)
+
+    dct=[]
+    clusts = {}
+    clustCount=1
+    otherSolos=[]
+    for arr in similarity_matrix:
+        temp=[]
+        for i in range(len(arr)):
+            if arr[i] >= 0.5:
+                if arr_sentences[i] not in dct:
+                    dct.append(arr_sentences[i])
+                    temp.append(arr_sentences[i])
+        if len(temp) == 1:
+            otherSolos.extend(temp)
+        elif len(temp) > 1:
+            clusts["C"+str(clustCount)] = temp
+            clustCount= clustCount + 1
+
+    clusts["others"]=otherSolos
+    return clusts
+
+print(clusters(replaced_sentences))

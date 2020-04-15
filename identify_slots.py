@@ -28,6 +28,7 @@ class Identify_Slots:
                 dis_arr = []
                 for no in reversed(range(distn+i+1)):
                     if no == i:
+                        # crr.append(["".join(dis_arr) + "r", sentence[no]])
                         crr.append(["".join(dis_arr) + "r", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
@@ -97,7 +98,8 @@ class Identify_Slots:
             arr_res = [itm[1] for itm in arr_n_occurs_of_key_value if itm[0] == key_item]
             if len(arr_res) >= self.min_items_in_slot:
                 if arr_res not in likely_slots.values():
-                    likely_slots[key_item] = arr_res
+                    # likely_slots[key_item] = arr_res
+                    likely_slots[arr_res[0]] = arr_res
 
         return likely_slots
 
