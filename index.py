@@ -5,6 +5,7 @@ from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 import numpy as np
 from doctovec import generate_clusters
+from cosine_sim import similar
 
 # manually add if you have any
 replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
@@ -64,14 +65,19 @@ steps_1 = [
 ]
 
 steps_2 = [
-    "replace_by_slotnames", # Replace every word in the utterance by it's slot name
-    "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
+    "replace_by_slotnames" # Replace every word in the utterance by it's slot name
+    # "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
 cleanup_sentences=run(steps_1, corpusx)
 replace_by_slotnames = identify_matching_words("identify_slots")
-replace_by_synonyms = identify_matching_words("identify_synonyms_antonyms")
+print("replace_by_slotnames", replace_by_slotnames)
+# replace_by_synonyms = identify_matching_words("identify_synonyms_antonyms")
+# print("replace_by_synonyms", replace_by_synonyms)
 replaced_sentences=run(steps_2, cleanup_sentences)
 print(replaced_sentences)
 
-generate_clusters(replaced_sentences, True)
+# generate_clusters(replaced_sentences, True)
+similarity_matrix = similar(replaced_sentences)
+for arr in similarity_matrix:
+    print([round(val, 2) for val in arr])

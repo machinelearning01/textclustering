@@ -4,7 +4,7 @@
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 
 def doctovec_model(arr_clean_sentences):
-    tagged_data = [TaggedDocument(words=_d, tags=[str(i)]) for i, _d in enumerate(arr_clean_sentences)]
+    tagged_data = [TaggedDocument(words=_d.split(), tags=[str(i)]) for i, _d in enumerate(arr_clean_sentences)]
     max_epochs = 10
     vec_size = 20
     alpha = 0.025
@@ -26,6 +26,7 @@ def doctovec_model(arr_clean_sentences):
         model.alpha -= 0.0002
         # fix the learning rate, no decay
         model.min_alpha = model.alpha
+    print("similar words",model.most_similar("computer"))
     model.save("saved_doc2vec_model")
 
 def generate_clusters(arr_clean_sentences, fresh_model):
