@@ -52,11 +52,14 @@ def identify_matching_words(type):
     elif type == "identify_slots":
         return identify_possible_slots(cleanup_sentences, slots_config)
 
-steps_1 = [
+steps_0 = [
     "lowercase", # Lowercase
     "remove_url", # Remove urls
     "remove_email", # Remove email address
-    "extract_only_text", # Extract only text (remove numbers and special characters)
+    "extract_only_text" # Extract only text (remove numbers and special characters)
+]
+
+steps_1 = [
     "remove_stopwords", # Remove stopwords
     "remove_unimportant_words", # Remove common words which may not help in clustering Ex: "policy" word is common in insurance or hr related utterances
     "lemmatize", # Identify and replace the base or dictionary form of a word
@@ -68,8 +71,9 @@ steps_2 = [
     # "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
-print(corpusx)
-cleanup_sentences=run(steps_1, corpusx)
+# print(corpusx)
+brushup_sentences=run(steps_0, corpusx)
+cleanup_sentences=run(steps_1, brushup_sentences)
 replace_by_slotnames = identify_matching_words("identify_slots")
 print("replace_by_slotnames", replace_by_slotnames)
 # replace_by_synonyms = identify_matching_words("identify_synonyms_antonyms")
@@ -91,14 +95,16 @@ def clusters(arr_sentences, min_length_clusters):
                 if arr_sentences[i] not in dct:
                     # print(arr_sentences[i] + "  ||  " + corpusx[i])
                     dct.append(arr_sentences[i])
-                    temp.append(corpusx[i])
+                    temp.append(brushup_sentences[i])
         if len(temp) < min_length_clusters:
             otherSolos.extend(temp)
         elif len(temp) >= min_length_clusters:
-            clusts["C"+str(clustCount)] = temp
+            clusts["C"+str(clustCount)+"_"+str(len(temp))] = temp
             clustCount= clustCount + 1
 
-    clusts["others"]=otherSolos
+    clusts["Others_"+str(len(otherSolos))]=otherSolos
     return clusts
 
-print(clusters(replaced_sentences, 2))
+intents = clusters(replaced_sentences, 2)
+for ky,vl in intents.items():
+    print(ky, vl)
