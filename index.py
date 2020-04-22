@@ -4,7 +4,6 @@ from input_data import input_data
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 import numpy as np
-from doctovec import generate_clusters
 from cosine_sim import similar
 
 # manually add if you have any
@@ -69,6 +68,7 @@ steps_2 = [
     # "replace_by_synonyms" # Replace every word in the utterance by it's synonyms identified from the corpus
 ]
 
+print(corpusx)
 cleanup_sentences=run(steps_1, corpusx)
 replace_by_slotnames = identify_matching_words("identify_slots")
 print("replace_by_slotnames", replace_by_slotnames)
@@ -77,9 +77,9 @@ print("replace_by_slotnames", replace_by_slotnames)
 replaced_sentences=run(steps_2, cleanup_sentences)
 print(replaced_sentences)
 
-def clusters(arr_sentences):
+def clusters(arr_sentences, min_length_clusters):
     similarity_matrix = similar(arr_sentences)
-
+    # print(similarity_matrix)
     dct=[]
     clusts = {}
     clustCount=1
@@ -89,15 +89,16 @@ def clusters(arr_sentences):
         for i in range(len(arr)):
             if arr[i] >= 0.5:
                 if arr_sentences[i] not in dct:
+                    # print(arr_sentences[i] + "  ||  " + corpusx[i])
                     dct.append(arr_sentences[i])
-                    temp.append(arr_sentences[i])
-        if len(temp) == 1:
+                    temp.append(corpusx[i])
+        if len(temp) < min_length_clusters:
             otherSolos.extend(temp)
-        elif len(temp) > 1:
+        elif len(temp) >= min_length_clusters:
             clusts["C"+str(clustCount)] = temp
             clustCount= clustCount + 1
 
     clusts["others"]=otherSolos
     return clusts
 
-print(clusters(replaced_sentences))
+print(clusters(replaced_sentences, 2))

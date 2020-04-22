@@ -4,5 +4,5 @@
 
 # https://kanoki.org/2019/03/07/sentence-similarity-in-python-using-doc2vec/
 
-https://medium.com/@adriensieg/text-similarities-da019229c894
+# https://medium.com/@adriensieg/text-similarities-da019229c894
 
