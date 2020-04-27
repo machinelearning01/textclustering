@@ -4,7 +4,7 @@ from input_data import input_data
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 import numpy as np
-from cosine_sim import similar
+from cosine_sim import similarity_matrix, clusters
 
 # manually add if you have any
 replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
@@ -81,30 +81,7 @@ print("replace_by_slotnames", replace_by_slotnames)
 replaced_sentences=run(steps_2, cleanup_sentences)
 print(replaced_sentences)
 
-def clusters(arr_sentences, min_length_clusters):
-    similarity_matrix = similar(arr_sentences)
-    # print(similarity_matrix)
-    dct=[]
-    clusts = {}
-    clustCount=1
-    otherSolos=[]
-    for arr in similarity_matrix:
-        temp=[]
-        for i in range(len(arr)):
-            if arr[i] >= 0.5:
-                if arr_sentences[i] not in dct:
-                    # print(arr_sentences[i] + "  ||  " + corpusx[i])
-                    dct.append(arr_sentences[i])
-                    temp.append(brushup_sentences[i])
-        if len(temp) < min_length_clusters:
-            otherSolos.extend(temp)
-        elif len(temp) >= min_length_clusters:
-            clusts["C"+str(clustCount)+"_"+str(len(temp))] = temp
-            clustCount= clustCount + 1
-
-    clusts["Others_"+str(len(otherSolos))]=otherSolos
-    return clusts
-
-intents = clusters(replaced_sentences, 2)
+# slot_replaced_sentences, cleanup_sentences, min_length_clusters, min_similarity, others_limit=100
+intents = clusters(replaced_sentences, brushup_sentences, 2, 0.7, 2)
 for ky,vl in intents.items():
     print(ky, vl)
