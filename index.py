@@ -3,8 +3,7 @@ from preprocessing import perform
 from input_data import input_data
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
-import numpy as np
-from cosine_sim import similarity_matrix, clusters
+from cosine_sim import Cosine_Sim
 
 # manually add if you have any
 replace_by_custom_synonyms = {} # {"ruler": {"queen", "king"}, "worrier": {"soldier", "sainik"}}
@@ -82,6 +81,7 @@ replaced_sentences=run(steps_2, cleanup_sentences)
 print(replaced_sentences)
 
 # slot_replaced_sentences, cleanup_sentences, min_length_clusters, min_similarity, others_limit=100
-intents = clusters(replaced_sentences, brushup_sentences, 2, 0.7, 2)
+cc = Cosine_Sim()
+intents = cc.clusters(replaced_sentences,brushup_sentences,2,0.6,2)
 for ky,vl in intents.items():
     print(ky, vl)
