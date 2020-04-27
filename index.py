@@ -1,6 +1,7 @@
 
 from preprocessing import perform
 from input_data import input_data
+from file_mgmt import write_excel
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 from cosine_sim import Cosine_Sim
@@ -78,10 +79,11 @@ print("replace_by_slotnames", replace_by_slotnames)
 # replace_by_synonyms = identify_matching_words("identify_synonyms_antonyms")
 # print("replace_by_synonyms", replace_by_synonyms)
 replaced_sentences=run(steps_2, cleanup_sentences)
-print(replaced_sentences)
+print("total_utterances_"+str(len(replaced_sentences)))
 
-# slot_replaced_sentences, cleanup_sentences, min_length_clusters, min_similarity, others_limit=100
+# slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100
 cc = Cosine_Sim()
-intents = cc.clusters(replaced_sentences,brushup_sentences,2,0.6,2)
+intents = cc.clusters(replaced_sentences,brushup_sentences, 2, 0.6, 0.2, 2)
 for ky,vl in intents.items():
     print(ky, vl)
+write_excel(intents, 'output_file.csv')

@@ -3,8 +3,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 class Cosine_Sim:
 	def __int__(self):
-		self.clusts={}
-		self.clust_no=1
+		self.clusts = {}
+		self.clust_no = 1
 
 	def similarity_matrix(self, cleaned_array):
 		vectorizer = CountVectorizer().fit_transform(cleaned_array)
@@ -13,9 +13,8 @@ class Cosine_Sim:
 		return csim
 
 
-	def clusters(self, slot_replaced_sentences, cleanup_sentences, min_length_clusters, min_similarity, others_limit=100):
+	def clusters(self, slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100):
 		similarity_matrx = self.similarity_matrix(slot_replaced_sentences)
-		print("others_count_"+str(len(slot_replaced_sentences)))
 
 		other_solos = []
 		dct=[]
@@ -24,7 +23,7 @@ class Cosine_Sim:
 			temp = []
 			other_temp=[]
 			for i in range(len(arr)):
-				if arr[i] >= min_similarity:
+				if arr[i] >= max_similarity:
 					if slot_replaced_sentences[i] not in dct:
 						dct.append(slot_replaced_sentences[i])
 						temp.append(cleanup_sentences[i])
@@ -33,12 +32,13 @@ class Cosine_Sim:
 				other_solos.extend(temp)
 				other_solos_slot_replaced_sents.extend(other_temp)
 			elif len(temp) >= min_length_clusters:
-				self.clusts["C" + str(self.clust_no) + "_" + str(min_similarity) + "_" + str(len(temp))] = temp
+				self.clusts["C" + str(self.clust_no) + "_" + str(max_similarity) + "_" + str(len(temp))] = temp
 				self.clust_no = self.clust_no + 1
 
-		if len(other_solos) >= (others_limit + min_length_clusters + 1) and min_similarity >= 0.2:
-			self.clusters(other_solos_slot_replaced_sents, other_solos, min_length_clusters, round(min_similarity - 0.1, 1), others_limit)
+		print("others_count_"+str(len(other_solos)))
+		if len(other_solos) >= (others_limit + min_length_clusters + 1) and max_similarity > min_similarity:
+			self.clusters(other_solos_slot_replaced_sents, other_solos, min_length_clusters, round(max_similarity - 0.1, 1), others_limit)
 		else:
-			self.clusts["Others_" + str(min_similarity) + "_" + str(len(other_solos))] = other_solos
+			self.clusts["Others_" + str(max_similarity) + "_" + str(len(other_solos))] = other_solos
 
 		return self.clusts
