@@ -2,7 +2,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
 class Cosine_Sim:
-	def __int__(self):
+	def __init__(self):
 		self.clusts = {}
 		self.clust_no = 1
 
