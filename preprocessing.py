@@ -30,6 +30,7 @@ def perform(action, sentence, params):
         "lowercase": lambda: sentence.lower(),
         "remove_url": lambda: re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', '', sentence),
         "remove_email": lambda: re.sub(r'\S*@\S*\s?', '', sentence),
+        "alphanumeric": lambda: re.sub('\W+','', sentence),
         "extract_only_text": lambda: " ".join(re.findall("[a-zA-Z]+", sentence)),
         "remove_stopwords": lambda: ' '.join([word for word in sentence.split() if word not in cachedStopWords]),
         "replace_by_synonyms": lambda: replace_synonyms(sentence, params),
