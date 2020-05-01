@@ -32,6 +32,7 @@ class Identify_Slots:
                         crr.append(["".join(dis_arr) + "r", sentence[no]])
                     else:
                         dis_arr.append(sentence[no])
+
         return self.get_likely_slots(crr)
 
     def get_llc(self):
@@ -69,8 +70,8 @@ class Identify_Slots:
                 flag = 1
                 n_occurs_of_key_value.append(item)
 
-        if flag == 0:
-            print("No occurrences found")
+        # if flag == 0:
+        #     print("No occurrences found")
 
         arr_n_occurs_of_key_value = []
         for occ in n_occurs_of_key_value:
@@ -116,7 +117,6 @@ class Identify_Slots:
         lcr = self.get_lcr()
         crr = self.get_crr()
         llc = self.get_llc()
-        # print(lcr)
         identified_slots = {**lcr, **crr, **llc}
         return identified_slots
 
@@ -153,4 +153,5 @@ def identify_possible_slots(sentences, slots_config):
         print(idfy_slots.uniqueVals(llc))
 
         identify_possible_slots = idfy_slots.uniqueVals(lcr) + idfy_slots.uniqueVals(crr) + idfy_slots.uniqueVals(llc)
+        print("end2")
         return remove_subsets(identify_possible_slots)

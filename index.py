@@ -1,6 +1,5 @@
 
 from preprocessing import perform
-from input_data import input_data
 from file_mgmt import write_excel
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
@@ -70,7 +69,6 @@ class BotClusters:
                     params = self.replace_by_synonyms
                 elif step == "remove_unimportant_words":
                     params = self.remove_unimportant_words
-
                 utterance = perform(step, utterance, params)
             corpus.append(utterance)
         return corpus
@@ -82,7 +80,6 @@ class BotClusters:
             return identify_possible_slots(self.app_dict["step_output"], auto_generate_synonym_modes[self.auto_generate_synonyms_mode])
 
     def execute(self):
-        print("executing...")
         self.app_dict["step_output"] = ""
         for key, value in self.steps.items():
             if self.app_dict["step_output"] == "":
