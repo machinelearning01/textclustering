@@ -3,7 +3,7 @@ from index import BotClusters, auto_generate_synonym_modes, synonyms_generating_
 def validate(params):
     botname = ""
     excel_data = []
-    synonyms_generating_type = "auto_generate_synonyms"
+    synonyms_generating_type = synonyms_generating_types[0]
     custom_synonyms = {}
     auto_generate_synonyms_mode = "moderate"
     remove_unimportant_word = []
@@ -33,11 +33,11 @@ def validate(params):
         if "synonyms_generating_type" in params["adv_settings"]:
             if params["adv_settings"]["synonyms_generating_type"] in synonyms_generating_types:
                 synonyms_generating_type = params["adv_settings"]["synonyms_generating_type"]
-                if synonyms_generating_type == "custom_synonyms":
-                    if "custom_synonyms" in params["adv_settings"]:
-                        if type(params["adv_settings"]["custom_synonyms"]) is dict:
-                            if bool(params["adv_settings"]["custom_synonyms"]):
-                                synonyms_generating_type = params["adv_settings"]["synonyms_generating_type"]
+                if synonyms_generating_type == synonyms_generating_types[1]:
+                    if synonyms_generating_types[1] in params["adv_settings"]:
+                        if type(params["adv_settings"][synonyms_generating_types[1]]) is dict:
+                            if bool(params["adv_settings"][synonyms_generating_types[1]]):
+                                custom_synonyms = params["adv_settings"][synonyms_generating_types[1]]
                             else:
                                 return "custom_synonyms cannot be empty"
                         else:
@@ -54,7 +54,7 @@ def validate(params):
                 return "output_utterances_type is not valid"
 
         if "auto_generate_synonyms_mode" in params["adv_settings"]:
-            if params["adv_settings"]["auto_generate_synonyms_mode"] in auto_generate_synonym_modes:
+            if params["adv_settings"]["auto_generate_synonyms_mode"] in auto_generate_synonym_modes.keys():
                 auto_generate_synonyms_mode = params["adv_settings"]["auto_generate_synonyms_mode"]
             else:
                 return "auto_generate_synonyms_mode is not valid"
@@ -110,6 +110,10 @@ def validate(params):
             else:
                 return "lowest_similarity_limit must be an integer"
 
+    print(botname, "excel_data", synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
+                     remove_unimportant_word, output_utterances_type, each_cluster_min_length,
+                     max_utterances_similarity,
+                     min_utterances_similarity, lowest_similarity_limit)
     return BotClusters(botname, excel_data, synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
                      remove_unimportant_word, output_utterances_type, each_cluster_min_length,
                      max_utterances_similarity,

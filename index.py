@@ -62,11 +62,13 @@ class BotClusters:
                 if step == "replace_by_synonyms":
                     if self.synonyms_generating_type == synonyms_generating_types[0]:
                         # Replace every word in the utterance by it's slot name
-                        self.replace_by_synonyms = self.identify_matching_words("identify_slots")
+                        params = self.identify_matching_words("identify_slots")
+                    elif self.synonyms_generating_type == synonyms_generating_types[1]:
+                        params = self.replace_by_synonyms
                     elif self.synonyms_generating_type == synonyms_generating_types[2]:
                         # Replace every word in the utterance by it's synonyms identified from the corpus
-                        self.replace_by_synonyms = self.identify_matching_words("identify_synonyms_antonyms")
-                    params = self.replace_by_synonyms
+                        params = self.identify_matching_words("identify_synonyms_antonyms")
+                    print("self.replace_by_synonyms", self.replace_by_synonyms)
                 elif step == "remove_unimportant_words":
                     params = self.remove_unimportant_words
                 utterance = perform(step, utterance, params)
@@ -87,6 +89,7 @@ class BotClusters:
             self.app_dict["step_output"] = self.run(value, self.app_dict["step_output"])
             if key == self.output_utterances_type:
                 self.app_dict["output_sentences"] = self.app_dict["step_output"]
+            print(key, self.app_dict["step_output"])
 
         print("total_utterances_" + str(len(self.app_dict["step_output"])))
 

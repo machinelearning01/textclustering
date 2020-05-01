@@ -9,7 +9,7 @@ params = {
         "custom_synonyms": {"system": ["windows", "mac", "ntid", "machine", "system"]},
         "auto_generate_synonyms_mode": "moderate",
         "remove_unimportant_word": ["abcd","wxyz"],
-        "output_utterances_type": "alphanumeric",
+        "output_utterances_type": "extract_only_text",
         "each_cluster_min_length": 2,
         "max_utterances_similarity": 0.4,
         "min_utterances_similarity": 0.2,

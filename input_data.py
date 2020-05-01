@@ -1,11 +1,11 @@
 from file_mgmt import read_excel
 
-input_data2 = ['queen IS Always referred to a godess visit@gmail.com',
-               'queen is looking like a godess',
-               'reset my windows password',
+input_data2 = ['queen IS Always referred to a godess visit_002@gmail.com',
+               'queen is looking like a 5 star godess',
+               'reset my 10 windows password',
              'reset my mac password',
                'queen was once a queen young girl queen',
-               'reset my windows password',
+               'reset my windows password and my id is jinraj_234',
              'reset my mac password',
                'a stronger person can become king in any kingdom',
              'reset my system password',

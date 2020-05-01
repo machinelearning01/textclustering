@@ -14,15 +14,13 @@ def remove_unimportant_words(utterance, unimportant_words):
 
 def replace_synonyms(utterance, params):
     synonyms = params
+    # print("replace_synonyms", utterance, synonyms)
     for value, synonym in synonyms.items():
         match = set(utterance.split(" ")).intersection(synonym)
         if len(match) >= 1:
             for item in synonym:
                 rjx = re.compile(r'\b' + item + r'\b')
                 utterance = re.sub(rjx, value, utterance)
-                # print("after replace", utterance)
-                # utterance = re.sub(r'\b'+item+'\b', value, utterance)
-                # utterance = utterance.replace(item, value)
     return utterance
 
 def perform(action, sentence, params):
