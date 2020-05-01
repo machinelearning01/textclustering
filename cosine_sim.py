@@ -12,7 +12,6 @@ class Cosine_Sim:
 		csim = cosine_similarity(vectors)
 		return csim
 
-
 	def clusters(self, slot_replaced_sentences, original_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100):
 		similarity_matrx = self.similarity_matrix(slot_replaced_sentences)
 		print("max_similarity", str(max_similarity))
@@ -24,14 +23,15 @@ class Cosine_Sim:
 			other_temp=[]
 			for i in range(len(arr)):
 				if arr[i] >= max_similarity:
-					if slot_replaced_sentences[i] not in dct:
-						dct.append(slot_replaced_sentences[i])
+					if original_sentences[i] not in dct:
+						dct.append(original_sentences[i])
 						temp.append(original_sentences[i])
 						other_temp.append(slot_replaced_sentences[i])
+
 			if len(temp) < min_length_clusters:
 				other_solos.extend(temp)
 				other_solos_slot_replaced_sents.extend(other_temp)
-			elif len(temp) >= min_length_clusters:
+			else:
 				self.clusts["C" + str(self.clust_no) + "_" + str(max_similarity) + "_" + str(len(temp))] = temp
 				self.clust_no = self.clust_no + 1
 

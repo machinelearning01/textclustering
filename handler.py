@@ -5,8 +5,8 @@ params = {
     "botname": "pizza_bot",
     "excel_data": input_data(""),
     "adv_settings":{
-        "synonyms_generating_type": "custom_synonyms", # "upload_synonyms" OR "apply_global_synonyms"
-        "custom_synonyms": {"system": ["windows", "mac", "ntid", "machine", "system"]},
+        "synonyms_generating_type": "auto_generate_synonyms", # "auto_generate_synonyms" OR "custom_synonyms" OR "apply_global_synonyms"
+        "custom_synonyms": {},
         "auto_generate_synonyms_mode": "moderate",
         "remove_unimportant_word": ["abcd","wxyz"],
         "output_utterances_type": "extract_only_text",

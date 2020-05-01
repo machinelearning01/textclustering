@@ -68,7 +68,6 @@ class BotClusters:
                     elif self.synonyms_generating_type == synonyms_generating_types[2]:
                         # Replace every word in the utterance by it's synonyms identified from the corpus
                         params = self.identify_matching_words("identify_synonyms_antonyms")
-                    print("self.replace_by_synonyms", self.replace_by_synonyms)
                 elif step == "remove_unimportant_words":
                     params = self.remove_unimportant_words
                 utterance = perform(step, utterance, params)
@@ -88,20 +87,28 @@ class BotClusters:
                 self.app_dict["step_output"] = self.excel_data
             self.app_dict["step_output"] = self.run(value, self.app_dict["step_output"])
             if key == self.output_utterances_type:
+                # distinct_set = [val for val in set(self.app_dict["step_output"])]
+                # duplicates = len(self.app_dict["step_output"]) - len(distinct_set)
+                # if duplicates > 0:
+                #     print("removed "+str(duplicates)+" duplicates")
                 self.app_dict["output_sentences"] = self.app_dict["step_output"]
-            print(key, self.app_dict["step_output"])
+                # self.app_dict["step_output"] = distinct_set
+                # print(key, self.app_dict["step_output"])
 
         print("total_utterances_" + str(len(self.app_dict["step_output"])))
-
+        # print("params ", self.app_dict["step_output"], self.app_dict["output_sentences"])
         cc = Cosine_Sim()
         # slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100
         intents = cc.clusters(self.app_dict["step_output"], self.app_dict["output_sentences"],
                               self.each_cluster_min_length, self.max_utterances_similarity,
                               self.min_utterances_similarity, self.lowest_similarity_limit)
+        out_count = 0
         for ky, vl in intents.items():
+            out_count = out_count + len(vl)
             print(ky, vl)
 
-        write_excel(intents, self.botname+'_output.csv')
+        print("there were "+str(len(self.excel_data) - out_count) + " duplicates removed")
+        # write_excel(intents, self.botname+'_output.csv')
         self.finalise()
 
     def finalise(self):
