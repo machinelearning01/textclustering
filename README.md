@@ -9,7 +9,7 @@ Assuming you have 10,000 utterances and to perform below operations
 would definitely takes a lot of time 
 - **Cleaning up the utterances** - This includes removing unwanted utterances, email ids, numerics and special characters
 - **Create Intents** - Analyse the utterances and start clustering the related utterances together to form intents
-- **Identify Possible Slots**
+- **Identify Possible Slots** - Identify related words in the utterances to form slots/entities
 
 So just run this algorithm to ease your work 
 (there will be certain amount of effort you need
