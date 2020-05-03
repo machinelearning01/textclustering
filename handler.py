@@ -17,6 +17,7 @@ from validation import validate
 from input_data import input_data
 from file_mgmt import write_excel
 
+#Input parameters
 params = {
     "botname": "pizza_bot",
     "excel_data": input_data(""),
@@ -28,8 +29,7 @@ params = {
         "output_utterances_type": "extract_only_text",
         "each_cluster_min_length": 2,
         "max_utterances_similarity": 0.4,
-        "min_utterances_similarity": 0.2,
-        "lowest_similarity_limit": 1
+        "min_utterances_similarity": 0.2
     },
     "export_results_to_csv": False
 }
