@@ -1,4 +1,20 @@
-from operator import itemgetter
+"""
+Text Clustering: Identify_Slots
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+This class constructor takes array of utterances and four integer parameter
+which actually defines the mode of generating synonyms (auto_generate_synonym_modes - explained in index.py file).
+> performs cleaning the utterances like given in the global variable ``steps``.
+> identify synonyms and replace the words in the utterances by synonym name
+> generates maximum number of clusters
+and returns clustered utterances
+
+``execute`` is the main method which initiates the execution
+"""
 
 class Identify_Slots:
     def __init__(self, sentences, strong_relation_distance, min_occurrences_of_neighbour_keys, min_occurrences_of_keyword, min_items_in_slot):

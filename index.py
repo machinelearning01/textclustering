@@ -1,19 +1,46 @@
+"""
+Text Clustering: BotClusters
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+This class constructor takes array of utterances and other required parameters,
+> performs cleaning the utterances like given in the global variable ``steps``.
+> identify synonyms and replace the words in the utterances by synonym name
+> generates maximum number of clusters
+and returns clustered utterances
+
+``execute`` is the main method which initiates the execution
+"""
 
 from preprocessing import perform
-from file_mgmt import write_excel
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 from cosine_sim import Cosine_Sim
 
-# strong_relation_distance=1
-# min_occurrences_of_neighbour_keys=2
-# min_occurrences_of_keyword=2
-# min_items_in_slot=3
+# class global variables
+
+"""
+```auto_generate_synonym_modes```
+It has 3 different modes based on which it looks at the utterances for similar words to create slots.
+The combination of 4 different parameter values makes a mode. The values in array of array represent that respectively below
+- strong_relation_distance=1
+- min_occurrences_of_neighbour_keys=2
+- min_occurrences_of_keyword=2
+- min_items_in_slot=3
+"""
 auto_generate_synonym_modes = {
     "strict": [[1, 3, 3, 4]],
     "moderate": [[1, 3, 2, 4]],
     "loose": [[1, 2, 2, 4]]
 }
+
+"""
+```steps```
+These are the steps executed in the order they are given
+"""
 steps = {
     "alphanumeric": [
         "lowercase",  # Lowercase
@@ -34,6 +61,16 @@ steps = {
         "replace_by_synonyms"
     ]
 }
+
+"""
+```synonyms_generating_types```
+These are the ways of generating the synonyms. Choose one as per your need.
+> custom_synonyms - If you already have synonyms
+> auto_generate_synonyms - Selecting this, the model looks for the pattern of words appearing 
+in the utterances to find synonyms on its own
+> apply_global_synonyms - If you want to search for related synonyms and antonyms of words in the utterances
+and identify them as slots
+"""
 synonyms_generating_types = ["auto_generate_synonyms", "custom_synonyms", "apply_global_synonyms"]
 
 class BotClusters:
@@ -107,9 +144,9 @@ class BotClusters:
             out_count = out_count + len(vl)
             print(ky, vl)
 
-        print("there were "+str(len(self.excel_data) - out_count) + " duplicates removed")
-        # write_excel(intents, self.botname+'_output.csv')
+        print("removed "+str(len(self.excel_data) - out_count) + " duplicate utterances")
         self.finalise()
+        return intents
 
     def finalise(self):
         self.app_dict.clear()

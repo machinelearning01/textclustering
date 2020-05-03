@@ -1,3 +1,16 @@
+"""
+Text Clustering: identify_synonyms
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+``get_syn_ant`` identifies the synonyms and antonyms for a given word
+``identify_synonyms_matching_utters`` takes the array of utterances and identifies
+the global synonyms and antonyms of collect the similar words to form slots
+"""
+
 from nltk.corpus import wordnet
 import numpy as np
 

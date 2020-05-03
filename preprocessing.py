@@ -1,3 +1,16 @@
+"""
+Text Clustering: preprocessing
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+``perform`` is the key performer of the application
+It takes each utterance and performs the action asked to perform
+
+"""
+
 import re
 import nltk
 # nltk.download('stopwords')

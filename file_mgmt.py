@@ -1,3 +1,16 @@
+"""
+Text Clustering: file_mgmt
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+``read_excel`` takes the file path as the input and returns it's json format
+``write_excel`` takes the dictionary data and writes it csv file
+
+"""
+
 import xlrd
 import pandas as pd
 import os.path

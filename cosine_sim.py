@@ -1,3 +1,22 @@
+"""
+Text Clustering: Cosine_Sim
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+``similarity_matrix`` method takes array of utterances as parameter
+> convert a collection of text documents to a matrix of token counts
+> compute cosine similarity between samples in X and Y, where X and Y are the arrays
+So, similarities identified from one utterance against all other utterances
+
+``clusters`` method takes array of cleaned up utterances as parameter with other required parameters
+> based on the min_similarity score cluster them together
+and returns clustered utterances
+
+"""
+
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
