@@ -27,19 +27,6 @@ input_data2 = [
     'a intelligent woman can become anything in any kingdom'
 ]
 
-input_data1=['reset my windows password',
-             'reset my mac password',
-             'reset my system password',
-             'reset my ntid',
-             'reset my password',
-             'reset my machine',
-             'reset my windows password',
-             'reset my mac password',
-             'reset my system password',
-             'reset my ntid',
-             'reset my password',
-             'reset my machine',
-             'reset my windows password']
 
 def input_data(file_path):
     if file_path!="":

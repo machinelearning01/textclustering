@@ -1,3 +1,17 @@
+"""
+Text Clustering: validation
+
+Author: Jinraj K R <jinrajkr@gmail.com>
+Created Date: 1-Apr-2020
+Modified Date: 1-May-2020
+===================================
+
+This function takes input paramters and validates
+Returns a alert message if there is any invalid parameter
+If the validation gets success, it creates an instance of BotClusters and returns the object
+
+"""
+
 from index import BotClusters, auto_generate_synonym_modes, synonyms_generating_types, steps
 
 def validate(params):
