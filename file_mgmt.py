@@ -36,4 +36,4 @@ def write_excel(result, filename):
         for key, value in result.items():
             for item in value:
                 writer.writerow([item, key])
-        print("result is exported to csv file -", filename)
+    print("result is exported to csv file -", filename)

@@ -169,5 +169,4 @@ def identify_possible_slots(sentences, slots_config):
         print(idfy_slots.uniqueVals(llc))
 
         identify_possible_slots = idfy_slots.uniqueVals(lcr) + idfy_slots.uniqueVals(crr) + idfy_slots.uniqueVals(llc)
-        print("end2")
         return remove_subsets(identify_possible_slots)
