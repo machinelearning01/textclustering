@@ -15,6 +15,7 @@ import xlrd
 import pandas as pd
 import os.path
 import csv
+import xlsxwriter
 
 def read_excel(file_path):
     wb = xlrd.open_workbook(file_path)
@@ -30,10 +31,25 @@ def read_excel_with_pandas(file_path):
         data = pd.read_excel(file_path, index_col=0)
     return data
 
-def write_excel(result, filename):
-    with open(filename, 'w') as output:
-        writer = csv.writer(output)
-        for key, value in result.items():
+# def write_excel(result, filename):
+#     with open(filename, 'w') as output:
+#         writer = csv.writer(output)
+#         for key, value in result.items():
+#             for item in value:
+#                 writer.writerow([item, key])
+#
+#     print("result is exported to csv file -", filename)
+
+def write_excel(headers, data_array, filename):
+    workbook = xlsxwriter.Workbook(filename)
+    for sheet_no in range(len(headers)):
+        worksheet = workbook.add_worksheet("sheet"+str(sheet_no+1))
+        row = 1
+        for i in range(len(headers[sheet_no])):
+            worksheet.write(0, i, headers[sheet_no][i])
+        for key, value in data_array[sheet_no].items():
             for item in value:
-                writer.writerow([item, key])
-    print("result is exported to csv file -", filename)
+                worksheet.write(row, 0, key)
+                worksheet.write(row, 1, item)
+                row += 1
+    workbook.close()

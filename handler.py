@@ -25,14 +25,13 @@ params = {
         "synonyms_generating_type": "auto_generate_synonyms", # "auto_generate_synonyms" OR "custom_synonyms" OR "apply_global_synonyms"
         "custom_synonyms": {},
         "auto_generate_synonyms_mode": "moderate",
-        "remove_unimportant_word": ["abcd","wxyz"],
-        "output_utterances_type": "extract_only_text",
+        "remove_unimportant_word": [],
+        "output_utterances_type": "alphanumeric",
         "each_cluster_min_length": 2,
         "max_utterances_similarity": 0.4,
-        "min_utterances_similarity": 0.2,
-        "lowest_similarity_limit": 1
-    },
-    "export_results_to_csv": True
+        "min_utterances_similarity": 0.2
+        # "lowest_similarity_limit": 1
+    }
 }
 
 print("validating...")

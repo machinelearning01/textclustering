@@ -31,7 +31,7 @@ class Cosine_Sim:
 		csim = cosine_similarity(vectors)
 		return csim
 
-	def clusters(self, slot_replaced_sentences, original_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100):
+	def clusters(self, slot_replaced_sentences, original_sentences, min_length_clusters, max_similarity, min_similarity, others_limit):
 		similarity_matrx = self.similarity_matrix(slot_replaced_sentences)
 		print("max_similarity", str(max_similarity))
 		other_solos = []

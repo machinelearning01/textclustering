@@ -35,7 +35,7 @@ The combination of 4 different parameter values makes a mode. The values in arra
 auto_generate_synonym_modes = {
     "strict": [[1, 3, 3, 4]],
     "moderate": [[1, 3, 2, 4]],
-    "loose": [[1, 2, 2, 4]]
+    "loose": [[1, 2, 1, 3]]
 }
 
 """
@@ -106,6 +106,7 @@ class BotClusters:
                     elif self.synonyms_generating_type == synonyms_generating_types[2]:
                         # Replace every word in the utterance by it's synonyms identified from the corpus
                         params = self.identify_matching_words("identify_synonyms_antonyms")
+                    self.replace_by_synonyms = params
                 elif step == "remove_unimportant_words":
                     params = self.remove_unimportant_words
                 utterance = perform(step, utterance, params)
@@ -145,9 +146,11 @@ class BotClusters:
             out_count = out_count + len(vl)
             print(ky, vl)
 
+        print("identified slots -", self.replace_by_synonyms)
         print("removed "+str(len(self.excel_data) - out_count) + " duplicate utterances")
         output_csv_filename = self.botname + '_csv_output.csv'
-        write_excel(intents, output_csv_filename)
+
+        write_excel([["clusters", "utterances"],["slots", "values"]], [intents, self.replace_by_synonyms], output_csv_filename)
         self.finalise()
 
 
