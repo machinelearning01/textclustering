@@ -24,7 +24,7 @@ params = {
     "adv_settings":{
         "synonyms_generating_type": "auto_generate_synonyms", # "auto_generate_synonyms" OR "custom_synonyms" OR "apply_global_synonyms"
         "custom_synonyms": {},
-        "auto_generate_synonyms_mode": "moderate",
+        "auto_generate_synonyms_mode": "loose",
         "remove_unimportant_word": [],
         "output_utterances_type": "alphanumeric",
         "each_cluster_min_length": 2,
@@ -34,13 +34,16 @@ params = {
     }
 }
 
-print("validating...")
-resp = validate(params)
+def _main(params,return_type):
+    print("validating...")
+    resp = validate(params)
 
-if type(resp) == str:
-    print("alert:", resp)
-else:
-    print("initialised")
-    print("executing...")
-    intents = resp.execute()
-    print("process completed!")
+    if type(resp) == str:
+        print("alert:", resp)
+        return {"status":"400", "message": resp, "data":""}
+    else:
+        print("initialised")
+        print("executing...")
+        response_data = resp.execute(return_type)
+        print("process completed!")
+        return {"status":"200", "message": "sucessfully completed the process", "data":response_data}

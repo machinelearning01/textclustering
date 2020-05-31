@@ -10,7 +10,8 @@ Modified Date: 1-May-2020
 ``identify_synonyms_matching_utters`` takes the array of utterances and identifies
 the global synonyms and antonyms of collect the similar words to form slots
 """
-
+import nltk
+nltk.download('wordnet')
 from nltk.corpus import wordnet
 import numpy as np
 
