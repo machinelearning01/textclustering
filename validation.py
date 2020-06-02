@@ -61,12 +61,6 @@ def validate(params):
             else:
                 return "synonyms_generating_type is not valid"
 
-        if "output_utterances_type" in params["adv_settings"]:
-            if params["adv_settings"]["output_utterances_type"] in [*steps]:
-                output_utterances_type = params["adv_settings"]["output_utterances_type"]
-            else:
-                return "output_utterances_type is not valid"
-
         if "auto_generate_synonyms_mode" in params["adv_settings"]:
             if params["adv_settings"]["auto_generate_synonyms_mode"] in auto_generate_synonym_modes.keys():
                 auto_generate_synonyms_mode = params["adv_settings"]["auto_generate_synonyms_mode"]
@@ -74,7 +68,7 @@ def validate(params):
                 return "auto_generate_synonyms_mode is not valid"
 
         if "output_utterances_type" in params["adv_settings"]:
-            if params["adv_settings"]["output_utterances_type"] in [*steps]:
+            if params["adv_settings"]["output_utterances_type"] in steps.keys():
                 output_utterances_type = params["adv_settings"]["output_utterances_type"]
             else:
                 return "output_utterances_type is not valid"

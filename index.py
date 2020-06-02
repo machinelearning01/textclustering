@@ -162,7 +162,6 @@ class BotClusters:
 
     def finalise(self):
         self.app_dict.clear()
-        self.steps.clear()
         self.excel_data.clear()
 
 

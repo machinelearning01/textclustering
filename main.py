@@ -13,7 +13,7 @@ def get_data():
 @app.route('/slots', methods=['POST'])
 def get_slots():
     input_data = request.get_json()
-    # print(input_data)
+    print(input_data)
     slots_data = _main(input_data, "slots")
     return jsonify(slots_data)
 
