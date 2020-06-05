@@ -38,7 +38,7 @@ def identify_synonyms_matching_utters(corpus):
             syn, ant = get_syn_ant(word)
             syns = [x.lower() for x in np.concatenate([syn, ant])]
             if len(syns) >= 2:
-                match = (set(syns)).intersection(allwords)
+                match = list((set(syns)).intersection(allwords))
                 if len(match) >= 2:
                     if match not in synss.values():
                         if word in synss:
