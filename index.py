@@ -67,7 +67,7 @@ steps = {
 ```synonyms_generating_types```
 These are the ways of generating the synonyms. Choose one as per your need.
 > custom_synonyms - If you already have synonyms
-> auto_generate_synonyms - Selecting this, the model looks for the pattern of words appearing 
+> auto_generate_synonyms - Selecting this, the model looks for the pattern of words appearing
 in the utterances to find synonyms on its own
 > apply_global_synonyms - If you want to search for related synonyms and antonyms of words in the utterances
 and identify them as slots
@@ -163,8 +163,4 @@ class BotClusters:
     def finalise(self):
         self.app_dict.clear()
         self.excel_data.clear()
-
-
-
-
 
