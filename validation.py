@@ -103,7 +103,7 @@ def validate(params):
                     if round(params["adv_settings"]["min_utterances_similarity"], 1) >= 0.1 and round(params["adv_settings"]["min_utterances_similarity"], 1) <= 0.9:
                         min_utterances_similarity = round(params["adv_settings"]["min_utterances_similarity"], 1)
                     else:
-                        return "0.2 >= min_utterances_similarity <= 0.9"
+                        return "0.1 >= min_utterances_similarity <= 0.9"
                 else:
                     return "min_utterances_similarity must be less than max_utterances_similarity"
             else:
