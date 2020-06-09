@@ -35,7 +35,7 @@ The combination of 4 different parameter values makes a mode. The values in arra
 auto_generate_synonym_modes = {
     "strict": [[1, 3, 3, 4]],
     "moderate": [[1, 3, 2, 4]],
-    "loose": [[1, 2, 1, 3]]
+    "loose": [[1, 2, 1, 4]]
 }
 
 """

@@ -27,9 +27,9 @@ params = {
         "auto_generate_synonyms_mode": "loose",
         "remove_unimportant_word": [],
         "output_utterances_type": "alphanumeric",
-        "each_cluster_min_length": 2,
+        "each_cluster_min_length": 10,
         "max_utterances_similarity": 0.4,
-        "min_utterances_similarity": 0.2
+        "min_utterances_similarity": 0.1
         # "lowest_similarity_limit": 1
     }
 }

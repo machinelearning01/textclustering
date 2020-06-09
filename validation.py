@@ -23,8 +23,8 @@ def validate(params):
     remove_unimportant_word = []
     output_utterances_type = "extract_only_text"
     each_cluster_min_length = 10
-    max_utterances_similarity = 0.6
-    min_utterances_similarity = 0.2
+    max_utterances_similarity = 0.4
+    min_utterances_similarity = 0.1
     lowest_similarity_limit = 1
 
     if "botname" in params:
