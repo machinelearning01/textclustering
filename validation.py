@@ -118,7 +118,7 @@ def validate(params):
             else:
                 return "lowest_similarity_limit must be an integer"
 
-    print(botname, "excel_data", synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
+    print(botname, len(excel_data), synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
                      remove_unimportant_word, output_utterances_type, each_cluster_min_length,
                      max_utterances_similarity,
                      min_utterances_similarity, lowest_similarity_limit)

@@ -34,7 +34,7 @@ params = {
     }
 }
 
-def _main(params,return_type):
+def _main(params, return_type):
     print("validating...")
     resp = validate(params)
 
@@ -47,3 +47,14 @@ def _main(params,return_type):
         response_data = resp.execute(return_type)
         print("process completed!")
         return {"status":"200", "message": "sucessfully completed the process", "data":response_data}
+
+# print("validating...")
+# resp = validate(params)
+#
+# if type(resp) == str:
+#     print("alert:", resp)
+# else:
+#     print("initialised")
+#     print("executing...")
+#     response_data = resp.execute("slots")
+#     print("process completed!", response_data)
