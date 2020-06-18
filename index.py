@@ -35,7 +35,7 @@ The combination of 4 different parameter values makes a mode. The values in arra
 auto_generate_synonym_modes = {
     "strict": [[1, 3, 3, 4]],
     "moderate": [[1, 3, 2, 4]],
-    "loose": [[1, 2, 1, 3]]
+    "loose": [[1, 2, 1, 4]]
 }
 
 """
@@ -67,7 +67,7 @@ steps = {
 ```synonyms_generating_types```
 These are the ways of generating the synonyms. Choose one as per your need.
 > custom_synonyms - If you already have synonyms
-> auto_generate_synonyms - Selecting this, the model looks for the pattern of words appearing 
+> auto_generate_synonyms - Selecting this, the model looks for the pattern of words appearing
 in the utterances to find synonyms on its own
 > apply_global_synonyms - If you want to search for related synonyms and antonyms of words in the utterances
 and identify them as slots
@@ -119,7 +119,7 @@ class BotClusters:
         elif type == "identify_slots":
             return identify_possible_slots(self.app_dict["step_output"], auto_generate_synonym_modes[self.auto_generate_synonyms_mode])
 
-    def execute(self):
+    def execute(self, return_type):
         self.app_dict["step_output"] = ""
         for key, value in self.steps.items():
             if self.app_dict["step_output"] == "":
@@ -134,32 +134,33 @@ class BotClusters:
                 # self.app_dict["step_output"] = distinct_set
                 # print(key, self.app_dict["step_output"])
 
-        print("total_utterances_" + str(len(self.app_dict["step_output"])))
-        # print("params ", self.app_dict["step_output"], self.app_dict["output_sentences"])
-        cc = Cosine_Sim()
-        # slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100
-        intents = cc.clusters(self.app_dict["step_output"], self.app_dict["output_sentences"],
-                              self.each_cluster_min_length, self.max_utterances_similarity,
-                              self.min_utterances_similarity, self.lowest_similarity_limit)
-        out_count = 0
-        for ky, vl in intents.items():
-            out_count = out_count + len(vl)
-            print(ky, vl)
+        if (return_type == 'slots'):
+            self.finalise()
+            print("identified slots -", self.replace_by_synonyms)
+            return {"identified_slots": self.replace_by_synonyms}
+        else:
+            print("total_utterances_" + str(len(self.app_dict["step_output"])))
+            # print("params ", self.app_dict["step_output"], self.app_dict["output_sentences"])
+            cc = Cosine_Sim()
+            # slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100
+            intents = cc.clusters(self.app_dict["step_output"], self.app_dict["output_sentences"],
+                                  self.each_cluster_min_length, self.max_utterances_similarity,
+                                  self.min_utterances_similarity, self.lowest_similarity_limit)
+            out_count = 0
+            for ky, vl in intents.items():
+                out_count = out_count + len(vl)
+                print(ky, vl)
 
-        print("identified slots -", self.replace_by_synonyms)
-        print("removed "+str(len(self.excel_data) - out_count) + " duplicate utterances")
-        output_csv_filename = self.botname + '_csv_output.csv'
+            print("identified slots -", self.replace_by_synonyms)
+            print("removed "+str(len(self.excel_data) - out_count) + " duplicate utterances")
+            # output_csv_filename = self.botname + '_csv_output.csv'
 
-        write_excel([["clusters", "utterances"],["slots", "values"]], [intents, self.replace_by_synonyms], output_csv_filename)
-        self.finalise()
+            # write_excel([["clusters", "utterances"],["slots", "values"]], [intents, self.replace_by_synonyms], output_csv_filename)
+            self.finalise()
+            return {"intents": intents}
 
 
     def finalise(self):
         self.app_dict.clear()
-        self.steps.clear()
         self.excel_data.clear()
-
-
-
-
 

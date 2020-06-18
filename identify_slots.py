@@ -139,11 +139,13 @@ class Identify_Slots:
 # remove the subsets and create dictionary
 def remove_subsets(ips):
     for k, v in ips.items():
-        for key, value in ips.items():
-            if v != value:
-                if set(v).issubset(set(value)):
-                    del ips[k]
-                    remove_subsets(ips)
+        for value in ips.values():
+            if v != value and set(v).issubset(set(value)):
+                # print("before", k, k in ips.keys())
+                # del ips[k]
+                # print("after", k, k in ips.keys())
+                fd = {ky: ips[ky] for ky in ips.keys() if ky != k}
+                remove_subsets(fd)
     return ips
 
 def identify_possible_slots(sentences, slots_config):

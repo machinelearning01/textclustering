@@ -23,8 +23,8 @@ def validate(params):
     remove_unimportant_word = []
     output_utterances_type = "extract_only_text"
     each_cluster_min_length = 10
-    max_utterances_similarity = 0.6
-    min_utterances_similarity = 0.2
+    max_utterances_similarity = 0.4
+    min_utterances_similarity = 0.1
     lowest_similarity_limit = 1
 
     if "botname" in params:
@@ -61,12 +61,6 @@ def validate(params):
             else:
                 return "synonyms_generating_type is not valid"
 
-        if "output_utterances_type" in params["adv_settings"]:
-            if params["adv_settings"]["output_utterances_type"] in [*steps]:
-                output_utterances_type = params["adv_settings"]["output_utterances_type"]
-            else:
-                return "output_utterances_type is not valid"
-
         if "auto_generate_synonyms_mode" in params["adv_settings"]:
             if params["adv_settings"]["auto_generate_synonyms_mode"] in auto_generate_synonym_modes.keys():
                 auto_generate_synonyms_mode = params["adv_settings"]["auto_generate_synonyms_mode"]
@@ -74,7 +68,7 @@ def validate(params):
                 return "auto_generate_synonyms_mode is not valid"
 
         if "output_utterances_type" in params["adv_settings"]:
-            if params["adv_settings"]["output_utterances_type"] in [*steps]:
+            if params["adv_settings"]["output_utterances_type"] in steps.keys():
                 output_utterances_type = params["adv_settings"]["output_utterances_type"]
             else:
                 return "output_utterances_type is not valid"
@@ -109,7 +103,7 @@ def validate(params):
                     if round(params["adv_settings"]["min_utterances_similarity"], 1) >= 0.1 and round(params["adv_settings"]["min_utterances_similarity"], 1) <= 0.9:
                         min_utterances_similarity = round(params["adv_settings"]["min_utterances_similarity"], 1)
                     else:
-                        return "0.2 >= min_utterances_similarity <= 0.9"
+                        return "0.1 >= min_utterances_similarity <= 0.9"
                 else:
                     return "min_utterances_similarity must be less than max_utterances_similarity"
             else:
@@ -124,7 +118,7 @@ def validate(params):
             else:
                 return "lowest_similarity_limit must be an integer"
 
-    print(botname, "excel_data", synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
+    print(botname, len(excel_data), synonyms_generating_type, custom_synonyms, auto_generate_synonyms_mode,
                      remove_unimportant_word, output_utterances_type, each_cluster_min_length,
                      max_utterances_similarity,
                      min_utterances_similarity, lowest_similarity_limit)
