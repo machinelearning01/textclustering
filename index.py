@@ -18,7 +18,7 @@ and returns clustered utterances
 from preprocessing import perform
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
-from cosine_sim import Cosine_Sim
+from cosine_sim_backup_28Jun import Cosine_Sim
 from file_mgmt import write_excel
 
 # class global variables

@@ -19,39 +19,11 @@ and returns clustered utterances
 
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-import gensim
-import nltk
 
 class Cosine_Sim:
 	def __init__(self):
 		self.clusts = {}
 		self.clust_no = 1
-		self.model = ""
-
-	def get_word_vector(self, word):
-		vec = 0
-		try:
-			vec = self.model[word] #np.array(outputvariable[word])*tf_idf[word]
-		except:
-			vec = 0
-		return (vec)
-
-	def get_phrase_vector(self, phrase):
-		vec = 0
-		length = len(phrase.split(' '))
-		for word in phrase.split(' '): 
-			vec = vec + self.get_word_vector(word)
-		vec = vec/length
-		return vec.reshape(1, -1)
-
-	def similarity_gensim(self, cleaned_array):
-		tokenzied_words=[nltk.word_tokenize(sent) for sent in cleaned_array]
-		self.model = gensim.models.Word2Vec(tokenzied_words, min_count=1, size=32, sg=1)
-		sent_embedding=[]
-		for sent in cleaned_array:
-			sent_embedding.append((self.get_phrase_vector(sent))[0])
-		csim=cosine_similarity(sent_embedding)
-		return csim
 
 	def similarity_matrix(self, cleaned_array):
 		vectorizer = CountVectorizer().fit_transform(cleaned_array)
@@ -60,9 +32,7 @@ class Cosine_Sim:
 		return csim
 
 	def clusters(self, slot_replaced_sentences, original_sentences, min_length_clusters, max_similarity, min_similarity, others_limit):
-		similarity_matrx = self.similarity_gensim(slot_replaced_sentences)
-		# similarity_matrx=self.similarity_matrix(slot_replaced_sentences)
-		print(similarity_matrx)
+		similarity_matrx = self.similarity_matrix(slot_replaced_sentences)
 		print("max_similarity", str(max_similarity))
 		other_solos = []
 		dct=[]
