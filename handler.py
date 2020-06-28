@@ -15,7 +15,7 @@ if export_results_to_csv is set true, then save the results into excel file
 
 from validation import validate
 from input_data import input_data
-
+import time
 
 #Input parameters
 params = {
@@ -27,7 +27,7 @@ params = {
         "auto_generate_synonyms_mode": "loose",
         "remove_unimportant_word": [],
         "output_utterances_type": "alphanumeric",
-        "each_cluster_min_length": 10,
+        "each_cluster_min_length": 2,
         "max_utterances_similarity": 0.4,
         "min_utterances_similarity": 0.1
         # "lowest_similarity_limit": 1
@@ -48,4 +48,7 @@ def _main(params, return_type):
         print("process completed!")
         return {"status":"200", "message": "sucessfully completed the process", "data":response_data}
 
-# _main(params, "intents")
+# start_time = time.time()
+# # res = _main(params, "intents")
+# # print(res["data"])
+# # print("---- %s seconds ----" % (time.time() - start_time))

@@ -51,6 +51,7 @@ class Cosine_Sim:
 		for sent in cleaned_array:
 			sent_embedding.append((self.get_phrase_vector(sent))[0])
 		csim=cosine_similarity(sent_embedding)
+		print("gensim csim", csim)
 		return csim
 
 	def similarity_matrix(self, cleaned_array):
@@ -60,9 +61,9 @@ class Cosine_Sim:
 		return csim
 
 	def clusters(self, slot_replaced_sentences, original_sentences, min_length_clusters, max_similarity, min_similarity, others_limit):
-		similarity_matrx = self.similarity_gensim(slot_replaced_sentences)
-		# similarity_matrx=self.similarity_matrix(slot_replaced_sentences)
-		print(similarity_matrx)
+		# similarity_matrx = self.similarity_gensim(slot_replaced_sentences)
+		similarity_matrx=self.similarity_matrix(slot_replaced_sentences)
+		# print(similarity_matrx)
 		print("max_similarity", str(max_similarity))
 		other_solos = []
 		dct=[]

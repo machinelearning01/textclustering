@@ -18,7 +18,7 @@ and returns clustered utterances
 from preprocessing import perform
 from identify_slots import identify_possible_slots
 import identify_synonyms as synant
-from cosine_sim_backup_28Jun import Cosine_Sim
+from cosine_sim import Cosine_Sim
 from file_mgmt import write_excel
 
 # class global variables
@@ -92,22 +92,22 @@ class BotClusters:
         self.app_dict = {}
         self.steps = steps
 
+    def generate_slots(self):
+        if self.synonyms_generating_type == synonyms_generating_types[0]:
+            # Replace every word in the utterance by it's slot name
+            self.replace_by_synonyms = self.identify_matching_words("identify_slots")
+        elif self.synonyms_generating_type == synonyms_generating_types[2]:
+            # Replace every word in the utterance by it's synonyms identified from the corpus
+            self.replace_by_synonyms = self.identify_matching_words("identify_synonyms_antonyms")
+
     def run(self, steps, utterances):
         corpus = []
         for utterance in utterances:
             for step in steps:
                 params = ""
                 if step == "replace_by_synonyms":
-                    if self.synonyms_generating_type == synonyms_generating_types[0]:
-                        # Replace every word in the utterance by it's slot name
-                        params = self.identify_matching_words("identify_slots")
-                    elif self.synonyms_generating_type == synonyms_generating_types[1]:
-                        params = self.replace_by_synonyms
-                    elif self.synonyms_generating_type == synonyms_generating_types[2]:
-                        # Replace every word in the utterance by it's synonyms identified from the corpus
-                        params = self.identify_matching_words("identify_synonyms_antonyms")
-                    self.replace_by_synonyms = params
-                elif step == "remove_unimportant_words":
+                    params = self.replace_by_synonyms
+                if step == "remove_unimportant_words":
                     params = self.remove_unimportant_words
                 utterance = perform(step, utterance, params)
             corpus.append(utterance)
@@ -124,7 +124,8 @@ class BotClusters:
         for key, value in self.steps.items():
             if self.app_dict["step_output"] == "":
                 self.app_dict["step_output"] = self.excel_data
-            self.app_dict["step_output"] = self.run(value, self.app_dict["step_output"])
+            if key == "replace_by_synonyms":
+                self.generate_slots()
             if key == self.output_utterances_type:
                 # distinct_set = [val for val in set(self.app_dict["step_output"])]
                 # duplicates = len(self.app_dict["step_output"]) - len(distinct_set)
@@ -133,6 +134,7 @@ class BotClusters:
                 self.app_dict["output_sentences"] = self.app_dict["step_output"]
                 # self.app_dict["step_output"] = distinct_set
                 # print(key, self.app_dict["step_output"])
+            self.app_dict["step_output"] = self.run(value, self.app_dict["step_output"])
 
         if (return_type == 'slots'):
             self.finalise()
