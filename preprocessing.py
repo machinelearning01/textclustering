@@ -19,37 +19,31 @@ cachedStopWords = stopwords.words("english")
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 
-def remove_unimportant_words(utterance, unimportant_words):
-    for word in utterance.split():
-        if word in unimportant_words:
-            utterance = utterance.replace(word, "")
-    return utterance
+def replace_synonyms(sents, syns):
+    res=[]
+    for s in sents:
+        for v, syn in syns.items():
+            m=set(s.split(' ')).intersection(syn)
+            if len(m)>=1:
+                for i in syn:
+                    s=(re.compile(r'\b'+i+r'\b')).sub(v,s)
+        res.append(s)
+    return res
 
-def replace_synonyms(utterance, params):
-    synonyms = params
-    # print("replace_synonyms", utterance, synonyms)
-    for value, synonym in synonyms.items():
-        match = set(utterance.split(" ")).intersection(synonym)
-        if len(match) >= 1:
-            for item in synonym:
-                rjx = re.compile(r'\b' + item + r'\b')
-                utterance = re.sub(rjx, value, utterance)
-    return utterance
-
-def perform(action, sentence, params):
+def perform(action, sents, params):
     switcher = {
-        "lowercase": lambda: sentence.lower(),
-        "remove_url": lambda: re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', '', sentence),
-        "remove_email": lambda: re.sub(r'\S*@\S*\s?', '', sentence),
-        "alphanumeric": lambda: " ".join(re.findall("[a-zA-Z0-9]+", sentence)),
-        "extract_only_text": lambda: " ".join(re.findall("[a-zA-Z]+", sentence)),
-        "remove_stopwords": lambda: ' '.join([word for word in sentence.split() if word not in cachedStopWords]),
-        "replace_by_synonyms": lambda: replace_synonyms(sentence, params),
-        "remove_unimportant_words": lambda: remove_unimportant_words(sentence, params),
-        "lemmatize": lambda: ' '.join([lemmatizer.lemmatize(word, "v") for word in sentence.split(" ")])
+        "lowercase": lambda:[x.strip().lower() for x in sents],
+        "remove_url": lambda: quick_replace(r'(https?ftp)\S+', sents),
+        "remove_email": lambda: [' '.join(i for i in s.split() if '@' not in i) for s in sents],
+        "alphanumeric": lambda: [' '.join(re.findall("[a-z0-9]+", s)) for s in sents],
+        "extract_only_text": lambda: [' '.join(re.findall("[a-z]+", s)) for s in sents],
+        "remove_stopwords": lambda: [' '.join([word for word in s.split() if word not in cachedStopWords]) for s in sents],
+        "replace_by_synonyms": lambda: replace_synonyms(sents, params),
+        "remove_unimportant_words": lambda: [' '.join([w for w in s.split() if w not in params]) for s in sents],
+        "lemmatize": lambda: [' '.join([lemmatizer.lemmatize(word, "v") for word in s.split(" ")]) for s in sents]
     }
-    result = switcher.get(action, lambda: "invalid action")()
-    # print("performing ["+action+"] => ", sentence, " || ",  result)
-    return re.sub(' +', ' ', result.strip())
+    return switcher.get(action, lambda: "invalid action")()
 
-
+def quick_replace(regex, sents):
+    w_pttrn = re.compile(regex)
+    return [w_pttrn.sub('',s).strip() for s in sents]

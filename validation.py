@@ -12,7 +12,8 @@ If the validation gets success, it creates an instance of BotClusters and return
 
 """
 
-from index import BotClusters, auto_generate_synonym_modes, synonyms_generating_types, steps
+from index import BotClusters, auto_generate_synonym_modes, synonyms_generating_types, steps, output_format
+import json
 
 def validate(params):
     botname = ""
@@ -22,8 +23,8 @@ def validate(params):
     auto_generate_synonyms_mode = "moderate"
     remove_unimportant_word = []
     output_utterances_type = "extract_only_text"
-    each_cluster_min_length = 10
-    max_utterances_similarity = 0.4
+    each_cluster_min_length = 2
+    max_utterances_similarity = 0.6
     min_utterances_similarity = 0.1
     lowest_similarity_limit = 1
 
@@ -68,7 +69,7 @@ def validate(params):
                 return "auto_generate_synonyms_mode is not valid"
 
         if "output_utterances_type" in params["adv_settings"]:
-            if params["adv_settings"]["output_utterances_type"] in steps.keys():
+            if params["adv_settings"]["output_utterances_type"] in output_format:
                 output_utterances_type = params["adv_settings"]["output_utterances_type"]
             else:
                 return "output_utterances_type is not valid"

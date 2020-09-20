@@ -26,7 +26,7 @@ params = {
         "custom_synonyms": {},
         "auto_generate_synonyms_mode": "loose",
         "remove_unimportant_word": [],
-        "output_utterances_type": "alphanumeric",
+        "output_utterances_type": "extract_only_text", #extract_only_text or alphanumeric
         "each_cluster_min_length": 2,
         "max_utterances_similarity": 0.4,
         "min_utterances_similarity": 0.1
@@ -48,7 +48,7 @@ def _main(params, return_type):
         print("process completed!")
         return {"status":"200", "message": "sucessfully completed the process", "data":response_data}
 
-# start_time = time.time()
-# # res = _main(params, "intents")
-# # print(res["data"])
-# # print("---- %s seconds ----" % (time.time() - start_time))
+start_time = time.time()
+res = _main(params, "intents")
+# print(res["data"])
+print("---- %s seconds ----" % (time.time() - start_time))

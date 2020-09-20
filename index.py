@@ -20,7 +20,7 @@ from identify_slots import identify_possible_slots
 import identify_synonyms as synant
 from cosine_sim import Cosine_Sim
 from file_mgmt import write_excel
-
+import time as t
 # class global variables
 
 """
@@ -42,27 +42,20 @@ auto_generate_synonym_modes = {
 ```steps```
 These are the steps executed in the order they are given
 """
-steps = {
-    "alphanumeric": [
+steps = [
         "lowercase",  # Lowercase
-        "remove_url",  # Remove urls
         "remove_email",  # Remove email address
-        "alphanumeric",  # Alphanumeric
-    ],
-    "extract_only_text": [
-        "extract_only_text"  # Extract only text (remove numbers and special characters)
-    ],
-    "lemmatize": [
+        "remove_url",  # Remove urls
+        "output_format",  # alphanumeric or extract_only_text
         "remove_stopwords",  # Remove stopwords
-        "remove_unimportant_words",
-        # Remove common words which may not help in clustering Ex: "policy" word is common in insurance or hr related utterances
-        "lemmatize"  # Identify and replace the base or dictionary form of a word
-    ],
-    "replace_by_synonyms": [
+        "remove_unimportant_words", # Remove common words which may not help in clustering Ex: "policy" word is common in insurance or hr related utterances
+        "lemmatize",  # Identify and replace the base or dictionary form of a word
         "replace_by_synonyms"
     ]
-}
-
+output_format = [
+    "alphanumeric",  # alphanumeric or extract_only_text
+    "extract_only_text",  # Extract only text (remove numbers and special characters)
+]
 """
 ```synonyms_generating_types```
 These are the ways of generating the synonyms. Choose one as per your need.
@@ -92,7 +85,7 @@ class BotClusters:
         self.app_dict = {}
         self.steps = steps
 
-    def generate_slots(self):
+    def gen_slots(self):
         if self.synonyms_generating_type == synonyms_generating_types[0]:
             # Replace every word in the utterance by it's slot name
             self.replace_by_synonyms = self.identify_matching_words("identify_slots")
@@ -100,18 +93,17 @@ class BotClusters:
             # Replace every word in the utterance by it's synonyms identified from the corpus
             self.replace_by_synonyms = self.identify_matching_words("identify_synonyms_antonyms")
 
-    def run(self, steps, utterances):
-        corpus = []
-        for utterance in utterances:
-            for step in steps:
-                params = ""
-                if step == "replace_by_synonyms":
-                    params = self.replace_by_synonyms
-                if step == "remove_unimportant_words":
-                    params = self.remove_unimportant_words
-                utterance = perform(step, utterance, params)
-            corpus.append(utterance)
-        return corpus
+    def run(self, step, utterances):
+        params = ""
+        if step == "replace_by_synonyms":
+            params = self.replace_by_synonyms
+        elif step == "remove_unimportant_words":
+            params = self.remove_unimportant_words
+        print('executing the step -', step)
+        t1=t.time()
+        res = perform(step, utterances, params)
+        print('finished the step -', step, "in", t.time() - t1, "seconds")
+        return res
 
     def identify_matching_words(self, type):
         if type == "identify_synonyms_antonyms":
@@ -121,24 +113,30 @@ class BotClusters:
 
     def execute(self, return_type):
         self.app_dict["step_output"] = ""
-        for key, value in self.steps.items():
+        for step in self.steps:
             if self.app_dict["step_output"] == "":
                 self.app_dict["step_output"] = self.excel_data
-            if key == "replace_by_synonyms":
-                self.generate_slots()
-            if key == self.output_utterances_type:
-                # distinct_set = [val for val in set(self.app_dict["step_output"])]
-                # duplicates = len(self.app_dict["step_output"]) - len(distinct_set)
-                # if duplicates > 0:
-                #     print("removed "+str(duplicates)+" duplicates")
-                self.app_dict["output_sentences"] = self.app_dict["step_output"]
-                # self.app_dict["step_output"] = distinct_set
-                # print(key, self.app_dict["step_output"])
-            self.app_dict["step_output"] = self.run(value, self.app_dict["step_output"])
+            if step == "replace_by_synonyms":
+                self.gen_slots()
+
+            self.app_dict["step_output"] = self.run(self.output_utterances_type if step == "output_format" else step, self.app_dict["step_output"])
+
+            if step == "output_format" and self.output_utterances_type:
+                distinct_set = [val for val in set(self.app_dict["step_output"])]
+                duplicates = len(self.app_dict["step_output"]) - len(distinct_set)
+                if duplicates > 0:
+                    print("removed "+str(duplicates)+" duplicates")
+                final_set = list(filter(None, distinct_set))
+                empty_set = len(distinct_set) - len(final_set)
+                if empty_set>0:
+                    print('removed', str(empty_set),"empty utterances")
+                self.app_dict["output_sentences"] = final_set
+                self.app_dict["step_output"] = final_set
+            # print(self.app_dict["step_output"])
 
         if (return_type == 'slots'):
             self.finalise()
-            print("identified slots -", self.replace_by_synonyms)
+            # print("identified slots -", self.replace_by_synonyms)
             return {"identified_slots": self.replace_by_synonyms}
         else:
             print("total_utterances_" + str(len(self.app_dict["step_output"])))
@@ -147,16 +145,9 @@ class BotClusters:
             # slot_replaced_sentences, cleanup_sentences, min_length_clusters, max_similarity, min_similarity, others_limit=100
             intents = cc.clusters(self.app_dict["step_output"], self.app_dict["output_sentences"],
                                   self.each_cluster_min_length, self.max_utterances_similarity,
-                                  self.min_utterances_similarity, self.lowest_similarity_limit)
-            out_count = 0
-            for ky, vl in intents.items():
-                out_count = out_count + len(vl)
-                print(ky, vl)
+                                  self.min_utterances_similarity)
 
-            print("identified slots -", self.replace_by_synonyms)
-            print("removed "+str(len(self.excel_data) - out_count) + " duplicate utterances")
             # output_csv_filename = self.botname + '_csv_output.csv'
-
             # write_excel([["clusters", "utterances"],["slots", "values"]], [intents, self.replace_by_synonyms], output_csv_filename)
             self.finalise()
             return {"intents": intents}
